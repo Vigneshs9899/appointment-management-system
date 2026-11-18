@@ -7,9 +7,9 @@ A modern full-stack Doctor Appointment Management System built using Flask, Post
 ## 🚀 Live Demo
 
 🌐 Live Website:
-https://doctor-appointment-devops.onrender.com/
+https://ayurveda-doctor-portal.onrender.com/
 📂 GitHub Repository:
-https://github.com/Vigneshs9899/doctor-appointment-devops.git
+https://github.com/Vigneshs9899/appointment-management-system.git
 
 ---
 
