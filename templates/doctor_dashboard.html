@@ -1,0 +1,1355 @@
+{% extends "base.html" %}
+
+{% block title %}
+Doctor Dashboard | Shayure Ayurveda Clinical Portal
+{% endblock %}
+
+{% block css %}
+<style>
+/* ==========================================================================
+   Ayurvedic Doctor Portal Design Tokens & Styles
+   ========================================================================== */
+:root {
+    --ayur-primary: #1b4332;
+    --ayur-primary-dark: #0f281e;
+    --ayur-primary-light: #2d6a4f;
+    --ayur-accent: #40916c;
+    --ayur-accent-soft: #52b788;
+    --ayur-subtle: #d8f3dc;
+    --ayur-mint: #e8f5e9;
+    --ayur-gold: #c9933b;
+    --ayur-gold-light: #fef7ec;
+    --ayur-terra: #b85d38;
+    --ayur-terra-light: #fdf2ed;
+    --ayur-canvas: #fbf9f5;
+    --ayur-surface: #ffffff;
+    --ayur-text: #192a20;
+    --ayur-muted: #5e6d64;
+    --ayur-border: #e6e2da;
+    --ayur-radius-sm: 8px;
+    --ayur-radius-md: 14px;
+    --ayur-radius-lg: 20px;
+    --ayur-shadow-sm: 0 4px 12px rgba(27, 67, 50, 0.05);
+    --ayur-shadow-md: 0 10px 30px rgba(27, 67, 50, 0.07);
+    --ayur-shadow-lg: 0 18px 45px rgba(27, 67, 50, 0.12);
+}
+
+body {
+    background-color: var(--ayur-canvas) !important;
+    color: var(--ayur-text);
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* Hero Header Banner */
+.doc-hero-banner {
+    background: linear-gradient(135deg, #163628 0%, #1b4332 60%, #2d6a4f 100%);
+    border-radius: var(--ayur-radius-lg);
+    color: #ffffff;
+    padding: 2.25rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--ayur-shadow-md);
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.doc-hero-banner::after {
+    content: "🌿";
+    position: absolute;
+    right: 2rem;
+    bottom: -1.5rem;
+    font-size: 10rem;
+    opacity: 0.08;
+    pointer-events: none;
+    line-height: 1;
+}
+
+.doc-hero-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-size: 2.15rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.35rem;
+    color: #ffffff !important;
+}
+
+.doc-vaidya-pill {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    padding: 0.35rem 0.85rem;
+    border-radius: 50rem;
+    font-size: 0.825rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.doc-live-clock {
+    background: rgba(201, 147, 59, 0.2);
+    border: 1px solid rgba(201, 147, 59, 0.4);
+    color: #ffd899;
+    padding: 0.35rem 0.85rem;
+    border-radius: 50rem;
+    font-size: 0.825rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* Action Buttons */
+.btn-doc-primary {
+    background: linear-gradient(135deg, #c9933b 0%, #e0aa53 100%);
+    color: #1a160c !important;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--ayur-radius-md);
+    padding: 0.75rem 1.4rem;
+    box-shadow: 0 6px 20px rgba(201, 147, 59, 0.35);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-doc-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(201, 147, 59, 0.45);
+    background: linear-gradient(135deg, #d49f47 0%, #e8b663 100%);
+    color: #120e06 !important;
+}
+
+.btn-doc-secondary {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff !important;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: var(--ayur-radius-md);
+    padding: 0.75rem 1.25rem;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-doc-secondary:hover {
+    background: rgba(255, 255, 255, 0.22);
+    transform: translateY(-2px);
+    color: #ffffff !important;
+}
+
+/* Metric Cards */
+.ayur-stat-card {
+    background: var(--ayur-surface);
+    border: 1px solid var(--ayur-border);
+    border-radius: var(--ayur-radius-md);
+    padding: 1.5rem;
+    transition: all 0.25s ease;
+    box-shadow: var(--ayur-shadow-sm);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+
+.ayur-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--ayur-shadow-md);
+    border-color: rgba(27, 67, 50, 0.25);
+}
+
+.ayur-stat-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.ayur-stat-card.card-primary::before { background: linear-gradient(90deg, #1b4332, #40916c); }
+.ayur-stat-card.card-warning::before { background: linear-gradient(90deg, #b85d38, #c9933b); }
+.ayur-stat-card.card-success::before { background: linear-gradient(90deg, #2d6a4f, #52b788); }
+.ayur-stat-card.card-info::before    { background: linear-gradient(90deg, #40916c, #74c69d); }
+
+.stat-icon-bubble {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+}
+
+.bubble-primary { background: #e8f5e9; color: #1b4332; }
+.bubble-warning { background: #fdf2ed; color: #b85d38; }
+.bubble-success { background: #d8f3dc; color: #2d6a4f; }
+.bubble-info    { background: #fef7ec; color: #c9933b; }
+
+.stat-value {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--ayur-text);
+    line-height: 1.1;
+    margin: 0.6rem 0 0.25rem 0;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ayur-muted);
+}
+
+.stat-trend {
+    font-size: 0.775rem;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: 50rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.trend-up { background: #d8f3dc; color: #1b4332; }
+.trend-alert { background: #fdf2ed; color: #b85d38; }
+.trend-neutral { background: #f4f1ea; color: #5e6d64; }
+
+/* Interactive Analytics Section */
+.ayur-chart-card {
+    background: var(--ayur-surface);
+    border: 1px solid var(--ayur-border);
+    border-radius: var(--ayur-radius-md);
+    padding: 1.6rem;
+    box-shadow: var(--ayur-shadow-sm);
+    height: 100%;
+}
+
+.chart-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--ayur-border);
+}
+
+.chart-card-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--ayur-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Patient Records Card & Table */
+.ayur-table-card {
+    background: var(--ayur-surface);
+    border: 1px solid var(--ayur-border);
+    border-radius: var(--ayur-radius-lg);
+    box-shadow: var(--ayur-shadow-md);
+    overflow: hidden;
+    margin-top: 2rem;
+}
+
+.table-toolbar {
+    padding: 1.5rem 1.75rem;
+    background: #ffffff;
+    border-bottom: 1px solid var(--ayur-border);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.search-input-group {
+    position: relative;
+    min-width: 280px;
+    flex: 1;
+    max-width: 420px;
+}
+
+.search-input-group i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ayur-muted);
+}
+
+.search-input-group input {
+    padding-left: 2.6rem;
+    border-radius: var(--ayur-radius-md);
+    border: 1px solid var(--ayur-border);
+    background: var(--ayur-canvas);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.search-input-group input:focus {
+    background: #ffffff;
+    border-color: var(--ayur-accent);
+    box-shadow: 0 0 0 3px rgba(64, 145, 108, 0.15);
+}
+
+.filter-pills {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    border: 1px solid var(--ayur-border);
+    background: transparent;
+    color: var(--ayur-muted);
+    font-size: 0.825rem;
+    font-weight: 600;
+    padding: 0.4rem 0.85rem;
+    border-radius: 50rem;
+    transition: all 0.18s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--ayur-primary);
+    color: #ffffff;
+    border-color: var(--ayur-primary);
+}
+
+/* Table Styling */
+.ayur-table {
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
+.ayur-table thead th {
+    background-color: #f7f5f0;
+    color: var(--ayur-primary);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.825rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 1rem 1.25rem;
+    border-bottom: 2px solid var(--ayur-border);
+    white-space: nowrap;
+}
+
+.ayur-table tbody td {
+    padding: 1.15rem 1.25rem;
+    border-bottom: 1px solid #f0ede6;
+    color: var(--ayur-text);
+    font-size: 0.925rem;
+}
+
+.ayur-table tbody tr {
+    transition: background-color 0.18s ease;
+}
+
+.ayur-table tbody tr:hover {
+    background-color: rgba(216, 243, 220, 0.25);
+}
+
+/* Patient Avatar Badge */
+.patient-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 3px 8px rgba(45, 106, 79, 0.25);
+}
+
+/* Status Chips */
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-pending {
+    background-color: #fef7ec;
+    color: #b85d38;
+    border: 1px solid #f9dfbe;
+}
+
+.status-completed {
+    background-color: #d8f3dc;
+    color: #1b4332;
+    border: 1px solid #b7e4c7;
+}
+
+.status-cancelled {
+    background-color: #fde8e8;
+    color: #c53030;
+    border: 1px solid #f8b4b4;
+}
+
+.status-confirmed {
+    background-color: #e3f2fd;
+    color: #0d47a1;
+    border: 1px solid #bbdefb;
+}
+
+/* Action Buttons in Table */
+.btn-action-consult {
+    background: var(--ayur-primary);
+    color: #ffffff !important;
+    font-size: 0.825rem;
+    font-weight: 600;
+    padding: 0.45rem 0.85rem;
+    border-radius: var(--ayur-radius-sm);
+    border: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.btn-action-consult:hover {
+    background: var(--ayur-primary-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(27, 67, 50, 0.2);
+}
+
+.btn-action-report {
+    background: #f7f5f0;
+    color: var(--ayur-primary) !important;
+    font-size: 0.825rem;
+    font-weight: 600;
+    padding: 0.45rem 0.85rem;
+    border-radius: var(--ayur-radius-sm);
+    border: 1px solid var(--ayur-border);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.btn-action-report:hover {
+    background: #eae5dc;
+    color: var(--ayur-primary-dark) !important;
+}
+
+/* Add Patient Modal Styling */
+.ayur-modal .modal-content {
+    border-radius: var(--ayur-radius-lg);
+    border: none;
+    box-shadow: var(--ayur-shadow-lg);
+    overflow: hidden;
+    background-color: #ffffff;
+}
+
+.ayur-modal .modal-header {
+    background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
+    color: #ffffff;
+    padding: 1.5rem 2rem;
+    border-bottom: none;
+}
+
+.ayur-modal .modal-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff !important;
+}
+
+.ayur-modal .modal-body {
+    padding: 2rem;
+    background-color: #faf8f5;
+}
+
+.ayur-modal .modal-footer {
+    padding: 1.25rem 2rem;
+    background-color: #ffffff;
+    border-top: 1px solid var(--ayur-border);
+}
+
+.ayur-form-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ayur-primary);
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.ayur-form-control,
+.ayur-form-select {
+    border: 1px solid var(--ayur-border);
+    border-radius: var(--ayur-radius-sm);
+    padding: 0.65rem 0.9rem;
+    font-size: 0.925rem;
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+}
+
+.ayur-form-control:focus,
+.ayur-form-select:focus {
+    border-color: var(--ayur-accent);
+    box-shadow: 0 0 0 3px rgba(64, 145, 108, 0.15);
+    outline: none;
+}
+
+.dosha-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: #eef5f1;
+    color: #1b4332;
+    border: 1px solid #d0e4d7;
+}
+
+.empty-state-box {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-state-icon {
+    font-size: 3.5rem;
+    color: #b7cbbf;
+    margin-bottom: 1rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- Doctor Hero Greeting & Quick Action Banner -->
+    <div class="doc-hero-banner" data-aos="fade-up">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-7">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                    <span class="doc-vaidya-pill">
+                        <i class="bi bi-shield-check"></i> Senior Vaidya Portal
+                    </span>
+                    <span class="doc-live-clock" id="liveClockBadge">
+                        <i class="bi bi-clock"></i> <span id="currentDateDisplay">Loading date...</span>
+                    </span>
+                </div>
+                <h1 class="doc-hero-title">
+                    Ayubowan, Dr. {{ session['user'] }}
+                </h1>
+                <p class="text-white-50 mb-0 fs-6">
+                    Clinical OPD Dashboard & Patient Management System • Shayure Ayurveda
+                </p>
+            </div>
+            <div class="col-lg-5 text-lg-end">
+                <div class="d-flex flex-wrap justify-content-lg-end gap-2">
+                    <button type="button" class="btn btn-doc-primary" data-bs-toggle="modal" data-bs-target="#addPatientModal" id="btnOpenAddPatientModal">
+                        <i class="bi bi-person-plus-fill fs-5"></i>
+                        <span>+ Add Patient</span>
+                    </button>
+                    <button type="button" class="btn btn-doc-secondary" id="btnFilterTodayQuick">
+                        <i class="bi bi-calendar2-day"></i>
+                        <span>Today's Queue</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Metric Overview Cards -->
+    <div class="row g-4 mb-4" data-aos="fade-up" data-aos-delay="50">
+        
+        <!-- Total Patients -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="ayur-stat-card card-primary">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="stat-label">Total Consultations</div>
+                        <div class="stat-value">{{ total }}</div>
+                    </div>
+                    <div class="stat-icon-bubble bubble-primary">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <span class="stat-trend trend-up">
+                        <i class="bi bi-graph-up-arrow"></i> Cumulative volume
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Review -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="ayur-stat-card card-warning">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="stat-label">Pending Reviews</div>
+                        <div class="stat-value">{{ pending }}</div>
+                    </div>
+                    <div class="stat-icon-bubble bubble-warning">
+                        <i class="bi bi-hourglass-split"></i>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <span class="stat-trend trend-alert">
+                        <i class="bi bi-exclamation-circle"></i> Requires attention
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completed Consultations -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="ayur-stat-card card-success">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="stat-label">Completed Consultations</div>
+                        <div class="stat-value">{{ completed }}</div>
+                    </div>
+                    <div class="stat-icon-bubble bubble-success">
+                        <i class="bi bi-check2-circle"></i>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <span class="stat-trend trend-up">
+                        <i class="bi bi-heart-pulse"></i> Prescribed & stable
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Today's Schedule -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="ayur-stat-card card-info">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="stat-label">Today's OPD Queue</div>
+                        <div class="stat-value">{{ today }}</div>
+                    </div>
+                    <div class="stat-icon-bubble bubble-info">
+                        <i class="bi bi-calendar2-heart-fill"></i>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <span class="stat-trend trend-neutral">
+                        <i class="bi bi-dot"></i> Live OPD session
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Interactive Analytics Section -->
+    <div class="row g-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+        
+        <!-- Status Distribution Chart -->
+        <div class="col-lg-6">
+            <div class="ayur-chart-card">
+                <div class="chart-card-header">
+                    <h5 class="chart-card-title">
+                        <i class="bi bi-pie-chart-fill text-success"></i>
+                        <span>Appointment Status Distribution</span>
+                    </h5>
+                    <span class="badge rounded-pill bg-light text-muted border px-2 py-1 fs-7">
+                        Active Dataset
+                    </span>
+                </div>
+                <div style="position: relative; height: 230px;">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Trends Chart -->
+        <div class="col-lg-6">
+            <div class="ayur-chart-card">
+                <div class="chart-card-header">
+                    <h5 class="chart-card-title">
+                        <i class="bi bi-graph-up-trend text-success"></i>
+                        <span>Monthly Patient Trajectory</span>
+                    </h5>
+                    <span class="badge rounded-pill bg-light text-muted border px-2 py-1 fs-7">
+                        Inflow Volume
+                    </span>
+                </div>
+                <div style="position: relative; height: 230px;">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Patient & Appointment Management Table -->
+    <div class="ayur-table-card" data-aos="fade-up" data-aos-delay="150">
+        
+        <!-- Table Toolbar -->
+        <div class="table-toolbar">
+            <div class="d-flex align-items-center gap-3">
+                <h4 class="mb-0 fw-bold font-serif" style="color: var(--ayur-primary); font-family: 'Playfair Display', Georgia, serif;">
+                    🌿 Patient Records & Appointments
+                </h4>
+                <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-1 fw-semibold" id="tableTotalBadge">
+                    {{ appointments|length }} Appointments
+                </span>
+            </div>
+
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <!-- Search Box -->
+                <div class="search-input-group">
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="patientSearchInput" class="form-control" placeholder="Search patient name, doctor, or date...">
+                </div>
+
+                <!-- Status Filter Pills -->
+                <div class="filter-pills" role="group" aria-label="Filter status">
+                    <button type="button" class="filter-btn active" data-filter="all">All</button>
+                    <button type="button" class="filter-btn" data-filter="pending">Pending</button>
+                    <button type="button" class="filter-btn" data-filter="completed">Completed</button>
+                    <button type="button" class="filter-btn" data-filter="cancelled">Cancelled</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Responsive Container -->
+        <div class="table-responsive">
+            <table class="table ayur-table" id="appointmentsTable">
+                <thead>
+                    <tr>
+                        <th>Patient Details</th>
+                        <th>Attending Vaidya</th>
+                        <th>Consultation Slot</th>
+                        <th>Clinical Status</th>
+                        <th class="text-end">Clinical Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="appointmentTableBody">
+                    {% for appointment in appointments %}
+                    {% set appt_id = appointment[0] %}
+                    {% set appt_name = appointment[1] %}
+                    {% set appt_doctor = appointment[2] %}
+                    {% set appt_time = appointment[3] %}
+                    {% set appt_status = appointment[4] %}
+                    
+                    {# Compute initials safely #}
+                    {% set words = appt_name.split() if appt_name else ['P'] %}
+                    {% set initial1 = words[0][0] if words[0] else 'P' %}
+                    {% set initial2 = words[1][0] if words|length > 1 and words[1] else '' %}
+                    {% set initials = (initial1 + initial2)|upper %}
+
+                    <tr class="appointment-row" data-status="{{ (appt_status or 'Pending')|lower }}" data-name="{{ (appt_name or '')|lower }}" data-doctor="{{ (appt_doctor or '')|lower }}" data-id="{{ appt_id }}">
+                        
+                        <!-- Patient Info -->
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="patient-avatar">
+                                    {{ initials }}
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark">{{ appt_name }}</div>
+                                    <div class="text-muted small">ID: #AYUR-{{ appt_id }}</div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Doctor -->
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-heart-pulse text-success"></i>
+                                <span class="fw-medium">{{ appt_doctor }}</span>
+                            </div>
+                        </td>
+
+                        <!-- Appointment Time -->
+                        <td>
+                            <div class="d-flex flex-column">
+                                <span class="fw-semibold">
+                                    <i class="bi bi-calendar-event me-1 text-muted"></i>
+                                    {% if appt_time and appt_time.strftime is defined %}
+                                        {{ appt_time.strftime("%d %b %Y, %I:%M %p") }}
+                                    {% else %}
+                                        {{ appt_time }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </td>
+
+                        <!-- Status with Inline Interactive Quick-Changer -->
+                        <td>
+                            <div class="dropdown d-inline-block">
+                                <button class="btn btn-sm dropdown-toggle p-0 border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {% if appt_status == "Pending" %}
+                                    <span class="status-chip status-pending" id="statusChip-{{ appt_id }}">
+                                        <i class="bi bi-hourglass-split"></i> Pending
+                                    </span>
+                                    {% elif appt_status == "Completed" %}
+                                    <span class="status-chip status-completed" id="statusChip-{{ appt_id }}">
+                                        <i class="bi bi-check-circle-fill"></i> Completed
+                                    </span>
+                                    {% elif appt_status == "Cancelled" %}
+                                    <span class="status-chip status-cancelled" id="statusChip-{{ appt_id }}">
+                                        <i class="bi bi-x-circle-fill"></i> Cancelled
+                                    </span>
+                                    {% else %}
+                                    <span class="status-chip status-confirmed" id="statusChip-{{ appt_id }}">
+                                        <i class="bi bi-check-circle"></i> {{ appt_status }}
+                                    </span>
+                                    {% endif %}
+                                </button>
+                                <ul class="dropdown-menu shadow-sm border-0 py-1" style="font-size: 0.85rem;">
+                                    <li><h6 class="dropdown-header text-muted py-1" style="font-size: 0.75rem;">Change Status</h6></li>
+                                    <li><a class="dropdown-item py-1" href="javascript:void(0)" onclick="quickUpdateStatus({{ appt_id }}, 'Pending')"><i class="bi bi-hourglass-split text-warning me-2"></i>Mark Pending</a></li>
+                                    <li><a class="dropdown-item py-1" href="javascript:void(0)" onclick="quickUpdateStatus({{ appt_id }}, 'Completed')"><i class="bi bi-check2-circle text-success me-2"></i>Mark Completed</a></li>
+                                    <li><a class="dropdown-item py-1 text-danger" href="javascript:void(0)" onclick="quickUpdateStatus({{ appt_id }}, 'Cancelled')"><i class="bi bi-x-circle text-danger me-2"></i>Mark Cancelled</a></li>
+                                </ul>
+                            </div>
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="text-end">
+                            <div class="d-inline-flex align-items-center gap-2">
+                                <a href="/consultation/{{ appt_id }}" class="btn-action-consult" title="Start Consultation">
+                                    <i class="bi bi-clipboard2-pulse"></i>
+                                    <span>Consult</span>
+                                </a>
+                                <a href="/report/{{ appt_id }}" class="btn-action-report" title="View Clinical Report">
+                                    <i class="bi bi-file-earmark-medical"></i>
+                                    <span>Report</span>
+                                </a>
+                            </div>
+                        </td>
+
+                    </tr>
+                    {% else %}
+                    <tr id="emptyTableRow">
+                        <td colspan="5">
+                            <div class="empty-state-box">
+                                <div class="empty-state-icon">
+                                    <i class="bi bi-folder2-open"></i>
+                                </div>
+                                <h5 class="fw-bold text-muted">No Consultation Records Found</h5>
+                                <p class="text-muted small mb-3">No patients are currently scheduled. Use the button below to register a new intake.</p>
+                                <button type="button" class="btn btn-doc-primary" data-bs-toggle="modal" data-bs-target="#addPatientModal">
+                                    <i class="bi bi-person-plus-fill me-1"></i> Register First Patient
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                    <!-- Fallback row for search empty state -->
+                    <tr id="noSearchResultsRow" class="d-none">
+                        <td colspan="5">
+                            <div class="empty-state-box py-4">
+                                <div class="empty-state-icon mb-2">
+                                    <i class="bi bi-search"></i>
+                                </div>
+                                <h6 class="fw-bold text-muted">No matching appointments found</h6>
+                                <p class="text-muted small mb-0">Try adjusting your search query or status filter.</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==========================================================================
+     Add Patient Modal Dialog
+     ========================================================================== -->
+<div class="modal fade ayur-modal" id="addPatientModal" tabindex="-1" aria-labelledby="addPatientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="addPatientModalLabel">
+                        🌿 Register & Schedule Patient
+                    </h5>
+                    <p class="text-white-50 mb-0 small">
+                        Ayurvedic Clinical Intake & Appointment Scheduling Form
+                    </p>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Form -->
+            <form id="addPatientForm" method="POST" action="/doctor/add-patient">
+                <div class="modal-body">
+                    
+                    <!-- Alert message container -->
+                    <div id="modalAlertBox" class="alert d-none mb-3" role="alert"></div>
+
+                    <!-- Row 1: Name & Phone -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-7">
+                            <label class="ayur-form-label" for="modalPatientName">
+                                <i class="bi bi-person-fill text-success"></i> Full Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control ayur-form-control" id="modalPatientName" name="name" required placeholder="e.g. Smt. Ananya Sharma">
+                        </div>
+                        <div class="col-md-5">
+                            <label class="ayur-form-label" for="modalPatientPhone">
+                                <i class="bi bi-whatsapp text-success"></i> Phone / WhatsApp <span class="text-danger">*</span>
+                            </label>
+                            <input type="tel" class="form-control ayur-form-control" id="modalPatientPhone" name="phone" required placeholder="+91 98765 43210">
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Email, Age, Gender -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="ayur-form-label" for="modalPatientEmail">
+                                <i class="bi bi-envelope text-muted"></i> Email Address
+                            </label>
+                            <input type="email" class="form-control ayur-form-control" id="modalPatientEmail" name="email" placeholder="patient@example.com">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="ayur-form-label" for="modalPatientAge">
+                                <i class="bi bi-calendar3 text-muted"></i> Age
+                            </label>
+                            <input type="number" class="form-control ayur-form-control" id="modalPatientAge" name="age" min="1" max="120" placeholder="e.g. 35">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="ayur-form-label" for="modalPatientGender">
+                                <i class="bi bi-gender-ambiguous text-muted"></i> Gender
+                            </label>
+                            <select class="form-select ayur-form-select" id="modalPatientGender" name="gender">
+                                <option value="Female">Female</option>
+                                <option value="Male">Male</option>
+                                <option value="Other">Other</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Prakriti / Dosha & Appointment Time -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="ayur-form-label" for="modalPatientDosha">
+                                <i class="bi bi-flower1 text-warning"></i> Ayurvedic Dosha / Prakriti
+                            </label>
+                            <select class="form-select ayur-form-select" id="modalPatientDosha" name="dosha">
+                                <option value="Vata">Vata (Air & Space - Dry, Mobile)</option>
+                                <option value="Pitta">Pitta (Fire & Water - Sharp, Hot)</option>
+                                <option value="Kapha">Kapha (Earth & Water - Heavy, Stable)</option>
+                                <option value="Vata-Pitta">Vata-Pitta (Dual Dosha)</option>
+                                <option value="Pitta-Kapha">Pitta-Kapha (Dual Dosha)</option>
+                                <option value="Vata-Kapha">Vata-Kapha (Dual Dosha)</option>
+                                <option value="Tridosha" selected>Tridosha / Sama Prakriti (Balanced)</option>
+                            </select>
+                            <div class="form-text small text-muted">Primary clinical constitution observed during intake.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="ayur-form-label" for="modalAppointmentTime">
+                                <i class="bi bi-calendar-check-fill text-success"></i> Appointment Slot <span class="text-danger">*</span>
+                            </label>
+                            <input type="datetime-local" class="form-control ayur-form-control" id="modalAppointmentTime" name="appointment_time" required>
+                            <div class="form-text small text-muted">Preferred OPD consultation date & time.</div>
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Status & Doctor Selection -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="ayur-form-label" for="modalStatus">
+                                <i class="bi bi-flag-fill text-muted"></i> Initial Appointment Status
+                            </label>
+                            <select class="form-select ayur-form-select" id="modalStatus" name="status">
+                                <option value="Confirmed" selected>Confirmed</option>
+                                <option value="Pending">Pending Review</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="ayur-form-label" for="modalDoctor">
+                                <i class="bi bi-person-badge text-muted"></i> Attending Doctor
+                            </label>
+                            <input type="text" class="form-control ayur-form-control" id="modalDoctor" name="doctor" value="Dr. {{ session['user'] }}" readonly>
+                        </div>
+                    </div>
+
+                    <!-- Row 5: Symptoms / Chief Complaint -->
+                    <div class="mb-3">
+                        <label class="ayur-form-label" for="modalSymptoms">
+                            <i class="bi bi-activity text-danger"></i> Symptoms & Chief Complaints
+                        </label>
+                        <textarea class="form-control ayur-form-control" id="modalSymptoms" name="symptoms" rows="3" placeholder="Describe presenting chief complaints, duration, digestion (Agni), sleep quality, pain levels..."></textarea>
+                    </div>
+
+                    <!-- Row 6: Initial Clinical Notes -->
+                    <div class="mb-2">
+                        <label class="ayur-form-label" for="modalDoctorNotes">
+                            <i class="bi bi-journal-medical text-primary"></i> Doctor Intake Notes
+                        </label>
+                        <textarea class="form-control ayur-form-control" id="modalDoctorNotes" name="doctor_notes" rows="2" placeholder="Initial observations, preliminary herbs suggested, diet cautions..."></textarea>
+                    </div>
+
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary px-3" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-doc-primary px-4" id="btnSubmitPatient">
+                        <span class="spinner-border spinner-border-sm me-2 d-none" id="patientSubmitSpinner" role="status" aria-hidden="true"></span>
+                        <span id="patientSubmitText">
+                            <i class="bi bi-person-check-fill me-1"></i> Register & Schedule
+                        </span>
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Chart.js 4.4 -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    
+    // -------------------------------------------------------------------------
+    // 1. Live Clock & Date Display
+    // -------------------------------------------------------------------------
+    function updateClock() {
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        const dateStr = now.toLocaleDateString('en-US', options);
+        const displayEl = document.getElementById("currentDateDisplay");
+        if (displayEl) {
+            displayEl.textContent = dateStr;
+        }
+    }
+    updateClock();
+    setInterval(updateClock, 30000);
+
+    // Set default datetime in Add Patient modal to tomorrow 10:00 AM
+    const appointmentInput = document.getElementById("modalAppointmentTime");
+    if (appointmentInput && !appointmentInput.value) {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(10, 0, 0, 0);
+        const pad = (n) => String(n).padStart(2, '0');
+        const formatted = `${tomorrow.getFullYear()}-${pad(tomorrow.getMonth() + 1)}-${pad(tomorrow.getDate())}T${pad(tomorrow.getHours())}:${pad(tomorrow.getMinutes())}`;
+        appointmentInput.value = formatted;
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. Chart.js: Appointment Status Distribution
+    // -------------------------------------------------------------------------
+    try {
+        const rawStatusLabels = {{ status_chart | map(attribute=0) | list | tojson }};
+        const rawStatusData   = {{ status_chart | map(attribute=1) | list | tojson }};
+
+        const statusCtx = document.getElementById("statusChart");
+        if (statusCtx) {
+            // Ayurvedic color palette mapping
+            const colorMap = {
+                "Pending": { bg: "rgba(184, 93, 56, 0.85)", border: "#b85d38" },     // Warm Terracotta
+                "Completed": { bg: "rgba(45, 106, 79, 0.85)", border: "#2d6a4f" },   // Deep Forest Green
+                "Cancelled": { bg: "rgba(197, 48, 48, 0.85)", border: "#c53030" },   // Crimson
+                "Confirmed": { bg: "rgba(64, 145, 108, 0.85)", border: "#40916c" },  // Sage
+                "Default":   { bg: "rgba(201, 147, 59, 0.85)", border: "#c9933b" }   // Gold
+            };
+
+            const bgColors = rawStatusLabels.map(l => (colorMap[l] ? colorMap[l].bg : colorMap.Default.bg));
+            const borderColors = rawStatusLabels.map(l => (colorMap[l] ? colorMap[l].border : colorMap.Default.border));
+
+            new Chart(statusCtx, {
+                type: "bar",
+                data: {
+                    labels: rawStatusLabels.length ? rawStatusLabels : ["Pending", "Completed"],
+                    datasets: [{
+                        label: "Consultations",
+                        data: rawStatusData.length ? rawStatusData : [0, 0],
+                        backgroundColor: bgColors.length ? bgColors : ["#b85d38", "#2d6a4f"],
+                        borderColor: borderColors.length ? borderColors : ["#b85d38", "#2d6a4f"],
+                        borderWidth: 1.5,
+                        borderRadius: 8,
+                        barThickness: 32
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: "y",
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: "#192a20",
+                            titleFont: { family: "'Outfit', sans-serif", weight: 'bold' },
+                            bodyFont: { family: "'Plus Jakarta Sans', sans-serif" },
+                            padding: 10,
+                            cornerRadius: 8
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: { precision: 0, font: { family: "'Outfit', sans-serif" } },
+                            grid: { color: "rgba(0, 0, 0, 0.05)" }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { font: { family: "'Outfit', sans-serif", weight: '600' } }
+                        }
+                    }
+                }
+            });
+        }
+    } catch (e) {
+        console.error("Status chart initialization error:", e);
+    }
+
+    // -------------------------------------------------------------------------
+    // 3. Chart.js: Monthly Patient Volume & Trajectory
+    // -------------------------------------------------------------------------
+    try {
+        const rawMonthLabels = {{ monthly_chart | map(attribute=0) | list | tojson }};
+        const rawMonthData   = {{ monthly_chart | map(attribute=1) | list | tojson }};
+
+        const monthlyCtx = document.getElementById("monthlyChart");
+        if (monthlyCtx) {
+            const chartLabels = rawMonthLabels.length ? rawMonthLabels : ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+            const chartData = rawMonthData.length ? rawMonthData : [0, 0, 0, 0, 0, 0];
+
+            new Chart(monthlyCtx, {
+                type: "line",
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: "Consultations",
+                        data: chartData,
+                        borderColor: "#1b4332",
+                        backgroundColor: "rgba(45, 106, 79, 0.12)",
+                        borderWidth: 3,
+                        pointBackgroundColor: "#c9933b",
+                        pointBorderColor: "#ffffff",
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        tension: 0.38,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: "#192a20",
+                            titleFont: { family: "'Outfit', sans-serif", weight: 'bold' },
+                            bodyFont: { family: "'Plus Jakarta Sans', sans-serif" },
+                            padding: 10,
+                            cornerRadius: 8
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { precision: 0, font: { family: "'Outfit', sans-serif" } },
+                            grid: { color: "rgba(0, 0, 0, 0.05)" }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: "'Outfit', sans-serif", weight: '600' } }
+                        }
+                    }
+                }
+            });
+        }
+    } catch (e) {
+        console.error("Monthly chart initialization error:", e);
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. Live Table Search & Status Filtering
+    // -------------------------------------------------------------------------
+    const searchInput = document.getElementById("patientSearchInput");
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    const tableRows = document.querySelectorAll(".appointment-row");
+    const noResultsRow = document.getElementById("noSearchResultsRow");
+    const totalBadge = document.getElementById("tableTotalBadge");
+
+    let currentFilter = "all";
+    let searchQuery = "";
+
+    function filterTable() {
+        let visibleCount = 0;
+
+        tableRows.forEach(row => {
+            const rowStatus = (row.getAttribute("data-status") || "").toLowerCase();
+            const rowName = (row.getAttribute("data-name") || "").toLowerCase();
+            const rowDoctor = (row.getAttribute("data-doctor") || "").toLowerCase();
+            const rowText = row.innerText.toLowerCase();
+
+            const matchesStatus = (currentFilter === "all") || (rowStatus === currentFilter);
+            const matchesSearch = !searchQuery || rowText.includes(searchQuery) || rowName.includes(searchQuery) || rowDoctor.includes(searchQuery);
+
+            if (matchesStatus && matchesSearch) {
+                row.style.display = "";
+                visibleCount++;
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        if (noResultsRow) {
+            if (visibleCount === 0 && tableRows.length > 0) {
+                noResultsRow.classList.remove("d-none");
+            } else {
+                noResultsRow.classList.add("d-none");
+            }
+        }
+
+        if (totalBadge) {
+            totalBadge.textContent = `${visibleCount} of ${tableRows.length} Consultations`;
+        }
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener("input", function (e) {
+            searchQuery = e.target.value.trim().toLowerCase();
+            filterTable();
+        });
+    }
+
+    filterButtons.forEach(btn => {
+        btn.addEventListener("click", function () {
+            filterButtons.forEach(b => b.classList.remove("active"));
+            this.classList.add("active");
+            currentFilter = this.getAttribute("data-filter");
+            filterTable();
+        });
+    });
+
+    // Quick filter: Today's Queue button
+    const btnFilterTodayQuick = document.getElementById("btnFilterTodayQuick");
+    if (btnFilterTodayQuick) {
+        btnFilterTodayQuick.addEventListener("click", function () {
+            const today = new Date();
+            const pad = (n) => String(n).padStart(2, '0');
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const todayStr = `${pad(today.getDate())} ${months[today.getMonth()]} ${today.getFullYear()}`.toLowerCase();
+            
+            if (searchInput) {
+                searchInput.value = todayStr;
+                searchQuery = todayStr;
+                filterTable();
+            }
+        });
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. Add Patient Form is handled seamlessly by app.js (AJAX intake)
+    // -------------------------------------------------------------------------
+
+});
+
+// -----------------------------------------------------------------------------
+// 6. Quick Status Update Handler (PUT /appointments/<id>/status)
+// -----------------------------------------------------------------------------
+async function quickUpdateStatus(appointmentId, newStatus) {
+    const chip = document.getElementById(`statusChip-${appointmentId}`);
+    if (chip) {
+        chip.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> Updating...`;
+    }
+
+    try {
+        const response = await fetch(`/appointments/${appointmentId}/status`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ status: newStatus })
+        });
+
+        if (response.ok) {
+            // Update chip UI
+            if (chip) {
+                chip.className = `status-chip status-${newStatus.toLowerCase()}`;
+                let iconClass = "bi-hourglass-split";
+                if (newStatus === "Completed") iconClass = "bi-check-circle-fill";
+                if (newStatus === "Cancelled") iconClass = "bi-x-circle-fill";
+                chip.innerHTML = `<i class="bi ${iconClass}"></i> ${newStatus}`;
+            }
+
+            // Update row dataset
+            const row = document.querySelector(`.appointment-row[data-id="${appointmentId}"]`);
+            if (row) {
+                row.setAttribute("data-status", newStatus.toLowerCase());
+            }
+
+            // Create toast notification
+            showAyurToast(`Appointment #${appointmentId} status updated to ${newStatus}`, "success");
+        } else {
+            throw new Error(`Failed to update status (${response.status})`);
+        }
+    } catch (e) {
+        console.error("Error updating status:", e);
+        showAyurToast(`Error updating status: ${e.message}`, "danger");
+        if (chip) {
+            chip.innerHTML = `<i class="bi bi-exclamation-triangle"></i> Retry`;
+        }
+    }
+}
+
+// Global Toast helper
+function showAyurToast(msg, category = "success") {
+    const toastContainer = document.getElementById("toastContainer");
+    if (!toastContainer) {
+        alert(msg);
+        return;
+    }
+    const toastId = "toast_" + Date.now();
+    const icon = category === "success" ? "bi-check-circle-fill text-success" : "bi-exclamation-triangle-fill text-danger";
+    const toastHtml = `
+        <div id="${toastId}" class="toast ayur-toast show align-items-center mb-2 shadow" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4000">
+            <div class="d-flex align-items-center w-100">
+                <div class="toast-body d-flex align-items-center gap-2">
+                    <i class="bi ${icon} fs-5 flex-shrink-0"></i>
+                    <span class="ayur-toast-msg">${msg}</span>
+                </div>
+                <button type="button" class="btn-close me-3 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    `;
+    toastContainer.insertAdjacentHTML("beforeend", toastHtml);
+    setTimeout(() => {
+        const el = document.getElementById(toastId);
+        if (el) el.remove();
+    }, 4500);
+}
+</script>
+{% endblock %}

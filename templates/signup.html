@@ -1,0 +1,364 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create an Account — Shayure Ayurveda Healthcare Portal
+{% endblock %}
+
+{% block css %}
+<style>
+.auth-page-wrapper {
+    min-height: calc(100vh - 180px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    background: radial-gradient(circle at 50% 20%, #f4fbf6 0%, #fbf9f5 80%);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-card {
+    background: #ffffff;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    width: 100%;
+    max-width: 520px;
+    padding: 2.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 1.75rem;
+}
+
+.auth-emblem {
+    width: 64px;
+    height: 64px;
+    background: var(--primary-subtle);
+    color: var(--primary);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 0.85rem;
+    border: 1px solid var(--primary-subtle-border);
+}
+
+.auth-title {
+    font-family: var(--font-editorial);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.35rem;
+}
+
+.auth-subtitle {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+}
+
+/* Role Selector Radio Cards */
+.role-radio-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.role-radio-card {
+    border: 1.5px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    background: var(--surface-cream);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.role-radio-card:hover {
+    border-color: var(--primary-accent);
+    background: #ffffff;
+}
+
+.role-radio-card.selected {
+    border-color: var(--primary);
+    background: var(--primary-subtle);
+}
+
+.role-radio-card input[type="radio"] {
+    display: none;
+}
+
+.role-card-icon {
+    font-size: 1.4rem;
+    color: var(--primary);
+}
+
+.role-card-text strong {
+    display: block;
+    font-size: 0.88rem;
+    color: var(--primary);
+    line-height: 1.2;
+}
+
+.role-card-text small {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+}
+
+/* Input icon group */
+.input-icon-group {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    font-size: 1.1rem;
+    pointer-events: none;
+    z-index: 4;
+}
+
+.input-icon-group .form-control {
+    padding-left: 42px;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 4px;
+    z-index: 4;
+}
+
+.password-toggle-btn:hover {
+    color: var(--primary);
+}
+
+/* Password strength meter */
+.strength-bar-wrapper {
+    height: 4px;
+    background: #e6e2d8;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 6px;
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-page-wrapper">
+    <!-- Floating leaf motifs -->
+    <img src="{{ url_for('static', filename='images/leaf1.png') }}" class="leaf leaf1" style="top: 12%; right: 6%; width: 65px;" alt="" aria-hidden="true">
+    <img src="{{ url_for('static', filename='images/leaf3.png') }}" class="leaf leaf3" style="bottom: 10%; left: 8%; width: 50px;" alt="" aria-hidden="true">
+
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-emblem">🌿</div>
+            <h1 class="auth-title">Begin Your Journey</h1>
+            <p class="auth-subtitle">Create your Shayure Ayurveda portal account</p>
+        </div>
+
+        <form method="POST" action="/signup" id="signupForm" onsubmit="return validateSignupForm(event)">
+            <!-- Role Selection -->
+            <label class="form-label mb-2">Select Your Portal Role</label>
+            <div class="role-radio-group">
+                <label class="role-radio-card selected" id="cardPatient" onclick="pickRole('patient')">
+                    <input type="radio" name="role" value="patient" checked>
+                    <i class="bi bi-person-heart role-card-icon"></i>
+                    <div class="role-card-text">
+                        <strong>Patient</strong>
+                        <small>Book & track care</small>
+                    </div>
+                </label>
+                <label class="role-radio-card" id="cardDoctor" onclick="pickRole('doctor')">
+                    <input type="radio" name="role" value="doctor">
+                    <i class="bi bi-hospital role-card-icon"></i>
+                    <div class="role-card-text">
+                        <strong>Doctor / Vaidya</strong>
+                        <small>Clinical care portal</small>
+                    </div>
+                </label>
+            </div>
+
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <div class="input-icon-group">
+                    <i class="bi bi-person input-icon"></i>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Choose a unique username" required autofocus autocomplete="username" minlength="3">
+                </div>
+                <small class="text-muted" style="font-size: 0.76rem;">Minimum 3 characters (letters, numbers, or underscores)</small>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-icon-group">
+                    <i class="bi bi-lock input-icon"></i>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Create a strong password" required autocomplete="new-password" minlength="4" oninput="checkPasswordStrength(this.value)">
+                    <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('password', this)" title="Show/Hide password">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+                <div class="strength-bar-wrapper">
+                    <div class="strength-bar" id="strengthBar"></div>
+                </div>
+                <div class="d-flex justify-content-between mt-1">
+                    <small class="text-muted" id="strengthText" style="font-size: 0.74rem;">Password strength</small>
+                    <small class="text-muted" style="font-size: 0.74rem;">Min. 4 characters</small>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <div class="input-icon-group">
+                    <i class="bi bi-shield-lock input-icon"></i>
+                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required autocomplete="new-password" oninput="checkPasswordMatch()">
+                    <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('confirmPassword', this)" title="Show/Hide password">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+                <small id="matchMessage" style="font-size: 0.75rem; display: block; margin-top: 4px;"></small>
+            </div>
+
+            <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                <label class="form-check-label small text-muted" for="termsCheck">
+                    I agree to the <a href="javascript:void(0)" onclick="alert('Shayure Ayurveda adheres to AYUSH classical guidelines and respectful data confidentiality.')" class="text-success text-decoration-none">Terms of Ayurvedic Care</a> and Privacy Policy.
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-ayur-primary w-100 py-2 fs-6 shadow-sm" id="submitBtn">
+                <i class="bi bi-check-circle me-2"></i> Create Account
+            </button>
+        </form>
+
+        <div class="text-center mt-4 pt-3 border-top border-light">
+            <p class="small text-muted mb-0">
+                Already registered with Shayure Ayurveda? 
+                <a href="/login" class="text-success fw-bold text-decoration-none">Sign in to your account</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function pickRole(role) {
+    const cardPatient = document.getElementById('cardPatient');
+    const cardDoctor = document.getElementById('cardDoctor');
+    const radioPatient = cardPatient.querySelector('input[type="radio"]');
+    const radioDoctor = cardDoctor.querySelector('input[type="radio"]');
+
+    if (role === 'doctor') {
+        cardDoctor.classList.add('selected');
+        cardPatient.classList.remove('selected');
+        radioDoctor.checked = true;
+    } else {
+        cardPatient.classList.add('selected');
+        cardDoctor.classList.remove('selected');
+        radioPatient.checked = true;
+    }
+}
+
+function togglePasswordVisibility(fieldId, btn) {
+    const field = document.getElementById(fieldId);
+    const icon = btn.querySelector('i');
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.className = 'bi bi-eye-slash';
+    } else {
+        field.type = 'password';
+        icon.className = 'bi bi-eye';
+    }
+}
+
+function checkPasswordStrength(val) {
+    const bar = document.getElementById('strengthBar');
+    const text = document.getElementById('strengthText');
+    let strength = 0;
+
+    if (val.length >= 4) strength += 25;
+    if (val.length >= 7) strength += 25;
+    if (/[0-9]/.test(val)) strength += 25;
+    if (/[^A-Za-z0-9]/.test(val) || /[A-Z]/.test(val)) strength += 25;
+
+    bar.style.width = strength + '%';
+
+    if (strength <= 25) {
+        bar.style.backgroundColor = '#dc3545';
+        text.textContent = 'Weak';
+        text.className = 'text-danger';
+    } else if (strength <= 50) {
+        bar.style.backgroundColor = '#fd7e14';
+        text.textContent = 'Fair';
+        text.className = 'text-warning';
+    } else if (strength <= 75) {
+        bar.style.backgroundColor = '#c9933b';
+        text.textContent = 'Good';
+        text.className = 'text-primary';
+    } else {
+        bar.style.backgroundColor = '#2d6a4f';
+        text.textContent = 'Strong';
+        text.className = 'text-success';
+    }
+}
+
+function checkPasswordMatch() {
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    const msg = document.getElementById('matchMessage');
+
+    if (!confirm) {
+        msg.textContent = '';
+        return true;
+    }
+
+    if (password === confirm) {
+        msg.textContent = '✓ Passwords match';
+        msg.className = 'text-success';
+        return true;
+    } else {
+        msg.textContent = '✗ Passwords do not match';
+        msg.className = 'text-danger';
+        return false;
+    }
+}
+
+function validateSignupForm(e) {
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirmPassword').value;
+
+    if (password !== confirm) {
+        e.preventDefault();
+        if (window.showAyurToast) {
+            window.showAyurToast('Passwords do not match. Please verify and try again.', 'danger');
+        } else {
+            alert('Passwords do not match.');
+        }
+        return false;
+    }
+    return true;
+}
+</script>
+{% endblock %}

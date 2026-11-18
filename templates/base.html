@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>{% block title %}Shayure Ayurveda | Authentic Ayurvedic Healthcare & Consultations{% endblock %}</title>
+
+    <!-- Google Fonts: Plus Jakarta Sans (Body), Playfair Display (Editorial), Outfit (Headings/Badges) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons & FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- AOS (Animate on Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <!-- Core Design Tokens & Ayurvedic Styling -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    {% block head_extra %}{% endblock %}
+    {% block css %}{% endblock %}
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Unified Flash Toast Notifications Container -->
+    <div aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3 ayur-toast-container" style="z-index: 1090;">
+        <div id="toastContainer" class="toast-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, msg in messages %}
+                        {% set icon = "bi-info-circle-fill text-info" %}
+                        {% set toast_class = "toast-ayur-info" %}
+                        {% if category in ['success', 'ok'] %}
+                            {% set icon = "bi-check-circle-fill text-success" %}
+                            {% set toast_class = "toast-ayur-success" %}
+                        {% elif category in ['danger', 'error'] %}
+                            {% set icon = "bi-exclamation-triangle-fill text-danger" %}
+                            {% set toast_class = "toast-ayur-danger" %}
+                        {% elif category in ['warning'] %}
+                            {% set icon = "bi-exclamation-circle-fill text-warning" %}
+                            {% set toast_class = "toast-ayur-warning" %}
+                        {% endif %}
+                        <div class="toast ayur-toast show align-items-center mb-2 shadow {{ toast_class }}" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="6000" data-bs-autohide="true">
+                            <div class="d-flex align-items-center w-100">
+                                <div class="toast-body d-flex align-items-center gap-2">
+                                    <i class="bi {{ icon }} fs-5 flex-shrink-0"></i>
+                                    <span class="ayur-toast-msg">{{ msg }}</span>
+                                </div>
+                                <button type="button" class="btn-close me-3 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+
+    <!-- Navigation Bar Block -->
+    {% block navbar %}
+    <nav class="navbar navbar-expand-lg ayur-navbar sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                <span class="brand-emblem">🌿</span>
+                <div class="d-flex flex-column">
+                    <span class="brand-title">Shayure Ayurveda</span>
+                    <span class="brand-tagline">Holistic Healing Sanctuary</span>
+                </div>
+            </a>
+
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#ayurNavbarCollapse" aria-controls="ayurNavbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="ayurNavbarCollapse">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="bi bi-house-door me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#about"><i class="bi bi-flower1 me-1"></i> About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#services"><i class="bi bi-heart-pulse me-1"></i> Treatments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#contact"><i class="bi bi-geo-alt me-1"></i> Contact</a>
+                    </li>
+
+                    {% if session and session.get('user') %}
+                        {% if session.get('role') == 'doctor' %}
+                            <li class="nav-item ms-lg-2">
+                                <a class="nav-link nav-portal-chip" href="/doctor">
+                                    <i class="bi bi-speedometer2 me-1"></i> Doctor Portal
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown ms-lg-2">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 user-pill" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="avatar-badge">Dr</span>
+                                    <span class="fw-medium">Dr. {{ session.get('user') }}</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end ayur-dropdown shadow">
+                                    <li><a class="dropdown-item" href="/doctor"><i class="bi bi-grid-1x2 me-2"></i>Dashboard</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="nav-item ms-lg-2">
+                                <a class="nav-link nav-portal-chip" href="/dashboard">
+                                    <i class="bi bi-calendar2-check me-1"></i> Patient Portal
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown ms-lg-2">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 user-pill" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="avatar-badge"><i class="bi bi-person"></i></span>
+                                    <span class="fw-medium">{{ session.get('user') }}</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end ayur-dropdown shadow">
+                                    <li><a class="dropdown-item" href="/dashboard"><i class="bi bi-journal-medical me-2"></i>My Consultations</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                    {% else %}
+                        <li class="nav-item ms-lg-2">
+                            <a class="nav-link nav-signin-btn" href="/login">
+                                <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+                            </a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-ayur-primary btn-sm px-3 shadow-sm" href="/login">
+                                <i class="bi bi-calendar-plus me-1"></i> Book Consultation
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% endblock %}
+
+    <!-- Main Page Content Block -->
+    <main class="flex-grow-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Floating WhatsApp Action -->
+    {% block whatsapp_button %}
+    <a href="https://wa.me/919999999999" target="_blank" rel="noopener noreferrer" class="whatsapp-btn" aria-label="Chat with Ayurvedic Vaidya on WhatsApp" title="Chat on WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+    {% endblock %}
+
+    <!-- Sleek Botanical Footer -->
+    {% block footer %}
+    <footer class="ayur-footer mt-auto">
+        <div class="footer-decorative-bar"></div>
+        <div class="container py-5">
+            <div class="row g-4 justify-content-between">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand mb-3 d-flex align-items-center gap-2">
+                        <span class="footer-leaf-emblem">🌿</span>
+                        <h4 class="font-editorial mb-0 text-gold">Shayure Ayurveda</h4>
+                    </div>
+                    <p class="footer-bio text-muted-cream">
+                        Rooted in classical Vedic healing principles. We harmonize traditional Panchakarma, individualized Dosha diagnosis, and pristine botanical rasayanas with modern clinical excellence.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 mt-3 footer-dosha-chips">
+                        <span class="badge-dosha-mini vata"><i class="bi bi-wind me-1"></i>Vata</span>
+                        <span class="badge-dosha-mini pitta"><i class="bi bi-fire me-1"></i>Pitta</span>
+                        <span class="badge-dosha-mini kapha"><i class="bi bi-droplet me-1"></i>Kapha</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-3 col-6">
+                    <h6 class="footer-heading">Ayurvedic Therapies</h6>
+                    <ul class="list-unstyled footer-link-list">
+                        <li><a href="/#services"><i class="bi bi-chevron-right me-1"></i>Panchakarma Detox</a></li>
+                        <li><a href="/#services"><i class="bi bi-chevron-right me-1"></i>Nadi Pariksha</a></li>
+                        <li><a href="/#services"><i class="bi bi-chevron-right me-1"></i>Shirodhara Ritual</a></li>
+                        <li><a href="/#services"><i class="bi bi-chevron-right me-1"></i>Abhyanga Therapy</a></li>
+                        <li><a href="/#services"><i class="bi bi-chevron-right me-1"></i>Herbal Rasayana</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-3 col-6">
+                    <h6 class="footer-heading">Quick Portals</h6>
+                    <ul class="list-unstyled footer-link-list">
+                        <li><a href="/login"><i class="bi bi-chevron-right me-1"></i>Patient Portal</a></li>
+                        <li><a href="/login"><i class="bi bi-chevron-right me-1"></i>Doctor Login</a></li>
+                        <li><a href="/signup"><i class="bi bi-chevron-right me-1"></i>New Patient Signup</a></li>
+                        <li><a href="/dashboard"><i class="bi bi-chevron-right me-1"></i>Book Session</a></li>
+                        <li><a href="/#about"><i class="bi bi-chevron-right me-1"></i>About the Vaidya</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="footer-heading">Clinical Sanctuary</h6>
+                    <ul class="list-unstyled footer-contact-list">
+                        <li class="d-flex gap-2 mb-2">
+                            <i class="bi bi-geo-alt-fill text-gold mt-1"></i>
+                            <span>Tuticorin Wellness Campus, Tamil Nadu, India</span>
+                        </li>
+                        <li class="d-flex gap-2 mb-2">
+                            <i class="bi bi-telephone-fill text-gold mt-1"></i>
+                            <span>+91 98765 43210 / (0461) 234567</span>
+                        </li>
+                        <li class="d-flex gap-2 mb-2">
+                            <i class="bi bi-envelope-fill text-gold mt-1"></i>
+                            <span>care@shayureayurveda.com</span>
+                        </li>
+                        <li class="d-flex gap-2 mb-0">
+                            <i class="bi bi-clock-fill text-gold mt-1"></i>
+                            <span>Mon – Sat: 9:00 AM – 6:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-separator my-4"></div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 footer-bottom">
+                <p class="mb-0 text-muted-cream small">
+                    &copy; 2026 Shayure Ayurveda Healthcare. All rights reserved. Cultivating vitality through sacred nature.
+                </p>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="footer-badge-pill"><i class="bi bi-shield-check text-gold me-1"></i>Ayush Certified Center</span>
+                    <span class="footer-badge-pill"><i class="bi bi-flower1 text-gold me-1"></i>100% Herbal Purity</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+
+    <!-- Core Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+    <script>
+        // Initialize AOS animations
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    duration: 750,
+                    easing: 'ease-out-cubic',
+                    once: true,
+                    offset: 50
+                });
+            }
+
+            // Initialize all Bootstrap Toasts
+            var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+            var toastList = toastElList.map(function(toastEl) {
+                var toast = new bootstrap.Toast(toastEl, { delay: 6000 });
+                toast.show();
+                return toast;
+            });
+        });
+
+        // Global Ayurvedic Toast Notification Utility
+        window.showAyurToast = function(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const iconMap = {
+                success: 'bi-check-circle-fill text-success',
+                error: 'bi-exclamation-triangle-fill text-danger',
+                danger: 'bi-exclamation-triangle-fill text-danger',
+                warning: 'bi-exclamation-circle-fill text-warning',
+                info: 'bi-info-circle-fill text-info'
+            };
+            const borderMap = {
+                success: 'toast-ayur-success',
+                error: 'toast-ayur-danger',
+                danger: 'toast-ayur-danger',
+                warning: 'toast-ayur-warning',
+                info: 'toast-ayur-info'
+            };
+
+            const icon = iconMap[type] || iconMap.info;
+            const borderClass = borderMap[type] || 'toast-ayur-info';
+
+            const toastEl = document.createElement('div');
+            toastEl.className = `toast ayur-toast show align-items-center mb-2 shadow ${borderClass}`;
+            toastEl.setAttribute('role', 'alert');
+            toastEl.setAttribute('aria-live', 'assertive');
+            toastEl.setAttribute('aria-atomic', 'true');
+            toastEl.innerHTML = `
+                <div class="d-flex align-items-center w-100">
+                    <div class="toast-body d-flex align-items-center gap-2">
+                        <i class="bi ${icon} fs-5 flex-shrink-0"></i>
+                        <span class="ayur-toast-msg">${message}</span>
+                    </div>
+                    <button type="button" class="btn-close me-3 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            `;
+            container.appendChild(toastEl);
+            const bsToast = new bootstrap.Toast(toastEl, { delay: 5000, autohide: true });
+            bsToast.show();
+            toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+        };
+    </script>
+
+    {% block scripts %}{% endblock %}
+
+</body>
+</html>

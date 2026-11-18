@@ -1,0 +1,1319 @@
+/* ==========================================================================
+   SHAYURE AYURVEDA — DESIGN TOKEN SYSTEM & CORE STYLES
+   Impeccable Botanical Healthcare Architecture
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. DESIGN TOKENS (CSS Custom Properties)
+   -------------------------------------------------------------------------- */
+:root {
+    /* --- Ayurvedic Forest & Herbal Palette --- */
+    --primary: #1b4332;              /* Deep sacred forest green */
+    --primary-hover: #143527;        /* Midnight forest */
+    --primary-light: #2d6a4f;        /* Verdant medicinal leaf */
+    --primary-accent: #40916c;       /* Pure sage emerald */
+    --primary-subtle: #d8f3dc;       /* Dew mist green */
+    --primary-subtle-border: #b7e4c7;/* Soft leaf border */
+    --primary-dark: #0f291e;         /* Deep sanctuary green */
+
+    /* --- Canvas, Parchment & Surfaces --- */
+    --bg-body: #fbf9f5;              /* Warm linen / cream canvas */
+    --surface: #ffffff;              /* Crisp card surface */
+    --surface-card: #ffffff;
+    --surface-alt: #f5f2eb;          /* Warm stone / light parchment */
+    --surface-cream: #faf7f0;        /* Soft botanical tint */
+    --surface-glass: rgba(255, 255, 255, 0.92);
+    --surface-glass-dark: rgba(15, 41, 30, 0.94);
+
+    /* --- Warm Terracotta & Sacred Gold Accents --- */
+    --accent-gold: #c9933b;          /* Sacred turmeric / antique brass gold */
+    --accent-gold-light: #f7eedd;    /* Gold mist */
+    --accent-gold-hover: #a67426;    /* Deep burnished amber */
+    --accent-terra: #b85d38;         /* Ayurvedic copper / warm terracotta clay */
+    --accent-terra-light: #fcedea;   /* Warm terracotta blush */
+    --accent-terra-hover: #8f4021;   /* Rich burnt terracotta */
+
+    /* --- Typography & Neutral Slates --- */
+    --text-main: #192a20;            /* Dark forest slate */
+    --text-secondary: #3d5045;       /* Muted botanical slate */
+    --text-muted: #526359;           /* Secondary label slate */
+    --text-light: #7a8e82;           /* Subtle helper slate */
+    --text-inverse: #ffffff;         /* Pure white */
+    --text-cream: #fbf9f5;
+    --text-muted-cream: #c7d2cb;
+
+    /* --- Ayurvedic Dosha System (Constitution Colors) --- */
+    --dosha-vata: #3d5a73;           /* Ether & Air: Cool slate blue */
+    --dosha-vata-bg: #eef3f7;
+    --dosha-vata-border: #c8d8e5;
+
+    --dosha-pitta: #a94b26;          /* Fire & Water: Terracotta flame */
+    --dosha-pitta-bg: #fdf0ea;
+    --dosha-pitta-border: #f5cfc1;
+
+    --dosha-kapha: #215c3f;          /* Earth & Water: Medicinal evergreen */
+    --dosha-kapha-bg: #eaf5ee;
+    --dosha-kapha-border: #bee3cb;
+
+    --dosha-tridosha: #9c6e1e;       /* Harmonized: Sacred gold */
+    --dosha-tridosha-bg: #fdf7eb;
+    --dosha-tridosha-border: #f1ddb2;
+
+    /* --- Clinical Appointment Status System --- */
+    --status-confirmed: #1e5e3a;
+    --status-confirmed-bg: #e6f6eb;
+    --status-confirmed-border: #b8e6c4;
+
+    --status-pending: #a27218;
+    --status-pending-bg: #fdf5e6;
+    --status-pending-border: #f3dfad;
+
+    --status-completed: #1b4332;
+    --status-completed-bg: #d8f3dc;
+    --status-completed-border: #a4ddb6;
+
+    --status-cancelled: #9a4025;
+    --status-cancelled-bg: #fae8e3;
+    --status-cancelled-border: #f4c6b8;
+
+    /* --- Typography Families --- */
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-editorial: 'Playfair Display', Georgia, serif;
+    --font-heading: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+
+    /* --- Elevation & Atmospheric Shadows --- */
+    --shadow-xs: 0 1px 3px rgba(25, 42, 32, 0.04);
+    --shadow-sm: 0 2px 8px rgba(25, 42, 32, 0.06);
+    --shadow-md: 0 6px 20px rgba(25, 42, 32, 0.08), 0 1px 3px rgba(25, 42, 32, 0.03);
+    --shadow-lg: 0 14px 38px rgba(25, 42, 32, 0.10), 0 2px 6px rgba(25, 42, 32, 0.04);
+    --shadow-xl: 0 24px 56px rgba(25, 42, 32, 0.13), 0 4px 12px rgba(25, 42, 32, 0.06);
+    --shadow-gold: 0 6px 22px rgba(201, 147, 59, 0.22);
+    --shadow-emerald: 0 6px 22px rgba(45, 106, 79, 0.22);
+
+    /* --- Radii Tokens --- */
+    --radius-xs: 6px;
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --radius-pill: 9999px;
+
+    /* --- Subtle Border Dividers --- */
+    --border-subtle: #eae5da;
+    --border-light: rgba(27, 67, 50, 0.08);
+    --border-strong: rgba(27, 67, 50, 0.18);
+    --border-focus: #40916c;
+
+    /* --- Micro-Interactions & Transitions --- */
+    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --------------------------------------------------------------------------
+   2. RESET & BASE TYPOGRAPHY
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.65;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+/* Selection Highlight */
+::selection {
+    background: var(--primary-subtle);
+    color: var(--primary);
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin-top: 0;
+}
+
+/* High-contrast overrides for dark banners and dark surfaces (WCAG AAA compliance) */
+.consult-banner,
+.doc-hero-banner,
+.cta-banner,
+.hero-banner-dark,
+.ayur-footer,
+.bg-dark,
+.bg-success,
+.bg-primary,
+.bg-forest-dark,
+.text-white {
+    color: #ffffff;
+}
+
+.consult-banner h1,
+.consult-banner h2,
+.consult-banner h3,
+.consult-banner h4,
+.consult-banner h5,
+.consult-banner h6,
+.doc-hero-banner h1,
+.doc-hero-banner h2,
+.doc-hero-banner h3,
+.doc-hero-banner h4,
+.doc-hero-banner h5,
+.doc-hero-banner h6,
+.doc-hero-title,
+.cta-banner h1,
+.cta-banner h2,
+.cta-banner h3,
+.cta-banner h4,
+.cta-banner h5,
+.cta-banner h6,
+.cta-banner .display-6,
+.ayur-modal .modal-header h1,
+.ayur-modal .modal-header h2,
+.ayur-modal .modal-header h3,
+.ayur-modal .modal-header h4,
+.ayur-modal .modal-header h5,
+.ayur-modal .modal-header h6,
+.ayur-modal .modal-header .modal-title,
+.text-white h1,
+.text-white h2,
+.text-white h3,
+.text-white h4,
+.text-white h5,
+.text-white h6,
+.bg-dark h1,
+.bg-dark h2,
+.bg-dark h3,
+.bg-dark h4,
+.bg-dark h5,
+.bg-dark h6,
+.bg-success h1,
+.bg-success h2,
+.bg-success h3,
+.bg-success h4,
+.bg-success h5,
+.bg-success h6,
+.bg-primary h1,
+.bg-primary h2,
+.bg-primary h3,
+.bg-primary h4,
+.bg-primary h5,
+.bg-primary h6,
+h1.text-white,
+h2.text-white,
+h3.text-white,
+h4.text-white,
+h5.text-white,
+h6.text-white {
+    color: #ffffff !important;
+}
+
+/* Subtext in dark containers */
+.consult-banner .text-white-50,
+.doc-hero-banner .text-white-50,
+.cta-banner .text-white-50,
+.ayur-modal .modal-header .text-white-50,
+.cta-banner p.lead {
+    color: rgba(255, 255, 255, 0.92) !important;
+}
+
+/* Improved contrast for text-muted on light surfaces */
+.text-muted {
+    color: #3f5247 !important;
+}
+
+.font-editorial {
+    font-family: var(--font-editorial) !important;
+    letter-spacing: -0.01em;
+}
+
+.font-heading {
+    font-family: var(--font-heading) !important;
+}
+
+.font-sans {
+    font-family: var(--font-sans) !important;
+}
+
+/* Text Utilities */
+.text-forest { color: var(--primary) !important; }
+.text-forest-light { color: var(--primary-light) !important; }
+.text-gold { color: var(--accent-gold) !important; }
+.text-terra { color: var(--accent-terra) !important; }
+.text-muted-cream { color: var(--text-muted-cream) !important; }
+
+a {
+    color: var(--primary-light);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--primary);
+}
+
+/* --------------------------------------------------------------------------
+   3. NAVIGATION BAR (ayur-navbar)
+   -------------------------------------------------------------------------- */
+.ayur-navbar,
+.navbar {
+    background: rgba(251, 249, 245, 0.94) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 0.85rem 0;
+    transition: background var(--transition-base), box-shadow var(--transition-base);
+    z-index: 1030;
+}
+
+.navbar-brand {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--primary) !important;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0;
+}
+
+.brand-emblem {
+    font-size: 1.75rem;
+    line-height: 1;
+    filter: drop-shadow(0 2px 4px rgba(27, 67, 50, 0.15));
+}
+
+.brand-title {
+    font-family: var(--font-editorial);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+}
+
+.brand-tagline {
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-gold);
+}
+
+.nav-link {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.94rem;
+    color: var(--text-secondary) !important;
+    padding: 0.5rem 0.9rem !important;
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: var(--primary) !important;
+    background: rgba(45, 106, 79, 0.06);
+}
+
+.nav-link.active {
+    color: var(--primary) !important;
+    font-weight: 600;
+}
+
+.nav-portal-chip {
+    background: var(--primary-subtle);
+    color: var(--primary) !important;
+    font-weight: 600 !important;
+    padding: 0.45rem 1rem !important;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--primary-subtle-border);
+}
+
+.nav-portal-chip:hover {
+    background: #c3ebd0 !important;
+    color: var(--primary-dark) !important;
+}
+
+.nav-signin-btn {
+    font-weight: 600;
+    color: var(--primary) !important;
+}
+
+.user-pill {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-pill);
+    padding: 0.35rem 0.85rem 0.35rem 0.45rem !important;
+    box-shadow: var(--shadow-xs);
+}
+
+.avatar-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ayur-dropdown {
+    border-radius: var(--radius-md) !important;
+    border: 1px solid var(--border-subtle) !important;
+    box-shadow: var(--shadow-lg) !important;
+    background: var(--surface) !important;
+    padding: 0.5rem;
+    min-width: 200px;
+}
+
+.ayur-dropdown .dropdown-item {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    padding: 0.55rem 0.85rem;
+    border-radius: var(--radius-sm);
+    transition: var(--transition-fast);
+}
+
+.ayur-dropdown .dropdown-item:hover {
+    background: var(--primary-subtle);
+    color: var(--primary);
+}
+
+/* --------------------------------------------------------------------------
+   4. BUTTON SYSTEM (Exquisite & Tactile)
+   -------------------------------------------------------------------------- */
+.btn {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.94rem;
+    border-radius: var(--radius-sm);
+    padding: 0.65rem 1.35rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    letter-spacing: 0.01em;
+    border: 1.5px solid transparent;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-xs);
+}
+
+.btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3.5px rgba(45, 106, 79, 0.25);
+}
+
+/* Primary Forest Green */
+.btn-ayur-primary,
+.btn-success,
+.btn-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: #ffffff !important;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-ayur-primary:hover,
+.btn-success:hover,
+.btn-primary:hover {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+    color: #ffffff !important;
+    box-shadow: var(--shadow-emerald);
+}
+
+/* Accent Gold Button */
+.btn-ayur-gold {
+    background-color: var(--accent-gold) !important;
+    border-color: var(--accent-gold) !important;
+    color: #ffffff !important;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-ayur-gold:hover {
+    background-color: var(--accent-gold-hover) !important;
+    border-color: var(--accent-gold-hover) !important;
+    color: #ffffff !important;
+    box-shadow: var(--shadow-gold);
+}
+
+/* Accent Terracotta Button */
+.btn-ayur-terra {
+    background-color: var(--accent-terra) !important;
+    border-color: var(--accent-terra) !important;
+    color: #ffffff !important;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-ayur-terra:hover {
+    background-color: var(--accent-terra-hover) !important;
+    border-color: var(--accent-terra-hover) !important;
+    color: #ffffff !important;
+}
+
+/* Outline Forest */
+.btn-ayur-outline,
+.btn-outline-success,
+.btn-outline-primary {
+    background-color: transparent !important;
+    border-color: var(--primary) !important;
+    color: var(--primary) !important;
+}
+
+.btn-ayur-outline:hover,
+.btn-outline-success:hover,
+.btn-outline-primary:hover {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: #ffffff !important;
+}
+
+/* Soft Mint Button */
+.btn-ayur-soft {
+    background-color: var(--primary-subtle) !important;
+    border-color: var(--primary-subtle-border) !important;
+    color: var(--primary) !important;
+}
+
+.btn-ayur-soft:hover {
+    background-color: #c4ebd0 !important;
+    color: var(--primary-dark) !important;
+}
+
+/* Light / Parchment Button */
+.btn-light {
+    background-color: var(--surface) !important;
+    border-color: var(--border-subtle) !important;
+    color: var(--text-main) !important;
+    box-shadow: var(--shadow-xs);
+}
+
+.btn-light:hover {
+    background-color: var(--surface-alt) !important;
+    border-color: #ded9cd !important;
+    color: var(--primary) !important;
+}
+
+.btn-sm {
+    padding: 0.42rem 0.95rem;
+    font-size: 0.84rem;
+    border-radius: var(--radius-xs);
+}
+
+.btn-lg {
+    padding: 0.85rem 1.85rem;
+    font-size: 1.05rem;
+    border-radius: var(--radius-md);
+}
+
+/* --------------------------------------------------------------------------
+   5. CARDS & ELEVATED SURFACES
+   -------------------------------------------------------------------------- */
+.card {
+    background-color: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+    overflow: hidden;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: rgba(64, 145, 108, 0.22);
+}
+
+.card-body {
+    padding: 1.75rem;
+}
+
+/* Metric Overview Cards for Doctor Dashboard */
+.card-metric {
+    position: relative;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.card-metric:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.metric-icon-box {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.45rem;
+    margin-bottom: 1rem;
+}
+
+.metric-value {
+    font-family: var(--font-heading);
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--primary);
+    margin-bottom: 0.25rem;
+}
+
+.metric-label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.card-metric.accent-forest { border-top: 4px solid var(--primary-accent); }
+.card-metric.accent-gold   { border-top: 4px solid var(--accent-gold); }
+.card-metric.accent-terra  { border-top: 4px solid var(--accent-terra); }
+.card-metric.accent-emerald{ border-top: 4px solid var(--primary-light); }
+
+/* --------------------------------------------------------------------------
+   6. FORM CONTROLS & FLOATING LABELS
+   -------------------------------------------------------------------------- */
+.form-label {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    margin-bottom: 0.45rem;
+}
+
+.form-control,
+.form-select {
+    background-color: #faf8f3;
+    border: 1.5px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 0.72rem 1.05rem;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-weight: 400;
+    line-height: 1.5;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+
+.form-control::placeholder {
+    color: #9aa9a0;
+    font-size: 0.92rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: #ffffff;
+    border-color: var(--primary-accent);
+    box-shadow: 0 0 0 3.5px rgba(45, 106, 79, 0.16);
+    outline: none;
+    color: var(--text-main);
+}
+
+.form-control:read-only,
+.form-control:disabled {
+    background-color: #f2eee6;
+    color: var(--text-muted);
+    border-color: #ded9cd;
+    cursor: not-allowed;
+}
+
+textarea.form-control {
+    min-height: 110px;
+    resize: vertical;
+}
+
+/* Floating labels refined */
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select ~ label {
+    color: var(--primary-accent);
+    font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   7. TABLES & CLINICAL DATA DISPLAY
+   -------------------------------------------------------------------------- */
+.table-container {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.table {
+    margin-bottom: 0;
+    color: var(--text-main);
+    border-color: var(--border-subtle);
+    vertical-align: middle;
+}
+
+.table thead th {
+    background-color: var(--surface-cream);
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 1rem 1.25rem;
+    border-bottom: 2px solid var(--border-subtle);
+    white-space: nowrap;
+}
+
+.table tbody td {
+    padding: 1.1rem 1.25rem;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 0.94rem;
+    vertical-align: middle;
+}
+
+.table tbody tr {
+    transition: background-color var(--transition-fast);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(45, 106, 79, 0.035);
+}
+
+.table thead.table-success th {
+    background-color: #edf6ef !important;
+    color: var(--primary) !important;
+    border-bottom: 2px solid var(--primary-subtle-border) !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. AYURVEDIC DOSHA CHIPS & STATUS BADGES
+   -------------------------------------------------------------------------- */
+.badge {
+    border-radius: var(--radius-pill);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.8rem;
+    padding: 0.4em 0.85em;
+    letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    line-height: 1.2;
+}
+
+/* Dosha Chips */
+.badge-dosha-vata {
+    background: var(--dosha-vata-bg) !important;
+    color: var(--dosha-vata) !important;
+    border: 1px solid var(--dosha-vata-border) !important;
+}
+
+.badge-dosha-pitta {
+    background: var(--dosha-pitta-bg) !important;
+    color: var(--dosha-pitta) !important;
+    border: 1px solid var(--dosha-pitta-border) !important;
+}
+
+.badge-dosha-kapha {
+    background: var(--dosha-kapha-bg) !important;
+    color: var(--dosha-kapha) !important;
+    border: 1px solid var(--dosha-kapha-border) !important;
+}
+
+.badge-dosha-tridosha {
+    background: var(--dosha-tridosha-bg) !important;
+    color: var(--dosha-tridosha) !important;
+    border: 1px solid var(--dosha-tridosha-border) !important;
+}
+
+/* Appointment Status Badges */
+.badge-status-confirmed,
+.badge.bg-success {
+    background-color: var(--status-confirmed-bg) !important;
+    color: var(--status-confirmed) !important;
+    border: 1px solid var(--status-confirmed-border) !important;
+}
+
+.badge-status-pending,
+.badge.bg-warning {
+    background-color: var(--status-pending-bg) !important;
+    color: var(--status-pending) !important;
+    border: 1px solid var(--status-pending-border) !important;
+}
+
+.badge-status-completed {
+    background-color: var(--status-completed-bg) !important;
+    color: var(--status-completed) !important;
+    border: 1px solid var(--status-completed-border) !important;
+}
+
+.badge-status-cancelled,
+.badge.bg-danger {
+    background-color: var(--status-cancelled-bg) !important;
+    color: var(--status-cancelled) !important;
+    border: 1px solid var(--status-cancelled-border) !important;
+}
+
+.badge.bg-info {
+    background-color: #e8f3f8 !important;
+    color: #245b73 !important;
+    border: 1px solid #c8e0eb !important;
+}
+
+/* --------------------------------------------------------------------------
+   9. MODAL DIALOGS (E.g. Add Patient Modal)
+   -------------------------------------------------------------------------- */
+.modal-content {
+    background-color: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+}
+
+.modal-header {
+    background-color: var(--surface-cream);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 1.25rem 1.75rem;
+}
+
+.modal-header .modal-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modal-body {
+    padding: 1.75rem;
+}
+
+.modal-footer {
+    background-color: var(--surface-cream);
+    border-top: 1px solid var(--border-subtle);
+    padding: 1rem 1.75rem;
+}
+
+.modal-backdrop.show {
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    opacity: 0.55;
+    background-color: #0c2118;
+}
+
+/* --------------------------------------------------------------------------
+   10. ANALYTICS & CHART CONTAINERS
+   -------------------------------------------------------------------------- */
+.chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    height: 100%;
+    display: flex;
+    flex-column: column;
+}
+
+.chart-card-title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chart-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 240px;
+    flex-grow: 1;
+}
+
+/* --------------------------------------------------------------------------
+   11. UNIFIED FLASH TOAST NOTIFICATIONS
+   -------------------------------------------------------------------------- */
+.ayur-toast-container {
+    pointer-events: none;
+}
+
+.ayur-toast {
+    pointer-events: auto;
+    background: #ffffff !important;
+    border-radius: var(--radius-md) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-left: 4px solid var(--primary-accent) !important;
+    box-shadow: var(--shadow-lg) !important;
+    min-width: 320px;
+    max-width: 440px;
+    overflow: hidden;
+}
+
+.toast-ayur-success {
+    border-left-color: var(--primary-accent) !important;
+}
+
+.toast-ayur-danger {
+    border-left-color: var(--accent-terra) !important;
+}
+
+.toast-ayur-warning {
+    border-left-color: var(--accent-gold) !important;
+}
+
+.toast-ayur-info {
+    border-left-color: var(--dosha-vata) !important;
+}
+
+.ayur-toast .toast-body {
+    padding: 0.85rem 1rem;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.ayur-toast-msg {
+    line-height: 1.4;
+}
+
+/* --------------------------------------------------------------------------
+   12. BOTANICAL FOOTER
+   -------------------------------------------------------------------------- */
+.ayur-footer {
+    background: var(--primary-dark);
+    color: var(--text-cream);
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-decorative-bar {
+    height: 4px;
+    background: linear-gradient(90deg, #1b4332 0%, #c9933b 35%, #40916c 70%, #b85d38 100%);
+}
+
+.footer-leaf-emblem {
+    font-size: 1.85rem;
+    line-height: 1;
+}
+
+.footer-bio {
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--text-muted-cream);
+    margin-bottom: 1.25rem;
+}
+
+.footer-dosha-chips .badge-dosha-mini {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.footer-dosha-chips .badge-dosha-mini.vata  { border-color: rgba(61, 90, 115, 0.4); }
+.footer-dosha-chips .badge-dosha-mini.pitta { border-color: rgba(169, 75, 38, 0.4); }
+.footer-dosha-chips .badge-dosha-mini.kapha { border-color: rgba(33, 92, 63, 0.4); }
+
+.footer-heading {
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-gold);
+    margin-bottom: 1.25rem;
+}
+
+.footer-link-list li {
+    margin-bottom: 0.65rem;
+}
+
+.footer-link-list a {
+    color: #c7d5cd;
+    font-size: 0.92rem;
+    transition: color var(--transition-fast), transform var(--transition-fast);
+    display: inline-block;
+}
+
+.footer-link-list a:hover {
+    color: #ffffff;
+    transform: translateX(3px);
+}
+
+.footer-contact-list li {
+    font-size: 0.9rem;
+    color: #c7d5cd;
+}
+
+.footer-separator {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.footer-bottom {
+    font-size: 0.88rem;
+}
+
+.footer-badge-pill {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-muted-cream);
+}
+
+/* --------------------------------------------------------------------------
+   13. FLOATING WHATSAPP BUTTON
+   -------------------------------------------------------------------------- */
+.whatsapp-btn {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 58px;
+    height: 58px;
+    background: #25D366;
+    color: #ffffff !important;
+    font-size: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.35);
+    z-index: 999;
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.whatsapp-btn:hover {
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 14px 32px rgba(37, 211, 102, 0.45);
+    color: #ffffff !important;
+}
+
+/* --------------------------------------------------------------------------
+   14. BOTANICAL HERO & INTERACTIVE FEATURES
+   -------------------------------------------------------------------------- */
+.hero-section {
+    background: radial-gradient(circle at 50% 20%, #f4fbf6 0%, #fbf9f5 75%);
+    padding-top: 80px;
+    padding-bottom: 180px;
+    overflow: hidden;
+    position: relative;
+}
+
+.hero-badge {
+    display: inline-block;
+    background: var(--primary-subtle);
+    color: var(--primary);
+    padding: 10px 24px;
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+    font-size: 0.88rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow: var(--shadow-xs);
+    border: 1px solid var(--primary-subtle-border);
+}
+
+.hero-title {
+    font-family: var(--font-editorial);
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1.12;
+    color: var(--primary);
+    letter-spacing: -0.02em;
+}
+
+.hero-title span {
+    color: var(--accent-gold);
+}
+
+.hero-text {
+    width: 65%;
+    margin: 25px auto 0 auto;
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.hero-image {
+    width: 680px;
+    max-width: 100%;
+    animation: floatLeaf 5s ease-in-out infinite;
+    filter: drop-shadow(0 20px 40px rgba(27, 67, 50, 0.15));
+}
+
+@keyframes floatLeaf {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-14px); }
+    100% { transform: translateY(0px); }
+}
+
+.hero-card {
+    background: var(--surface);
+    padding: 24px;
+    border-radius: var(--radius-xl);
+    margin-top: -90px;
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-subtle);
+    position: relative;
+    z-index: 99;
+}
+
+.feature-box {
+    padding: 20px;
+}
+
+.feature-box:not(:last-child) {
+    border-right: 1px solid var(--border-subtle);
+}
+
+.icon-circle {
+    width: 58px;
+    height: 58px;
+    font-size: 24px;
+    margin: 0 auto 14px auto;
+    background: var(--primary-subtle);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform var(--transition-base), background-color var(--transition-base);
+}
+
+.icon-circle:hover {
+    transform: scale(1.1) rotate(6deg);
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.feature-box h4 {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 6px;
+}
+
+.feature-box p {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 0;
+}
+
+.stats-card {
+    background: var(--surface);
+    border-radius: var(--radius-xl);
+    padding: 28px 24px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-subtle);
+}
+
+.stat-item:not(:last-child) {
+    border-right: 1px solid var(--border-subtle);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    color: var(--accent-gold);
+}
+
+.stat-item h2 {
+    color: var(--primary);
+    font-family: var(--font-heading);
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+}
+
+.stat-item p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+
+/* Organic Floating Leaf Accents */
+.leaf {
+    position: absolute;
+    animation: leafMove 6s ease-in-out infinite;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.leaf1 {
+    left: 8%;
+    top: 28%;
+    width: 70px;
+}
+
+.leaf2 {
+    right: 10%;
+    top: 20%;
+    width: 90px;
+}
+
+.leaf3 {
+    left: 15%;
+    bottom: 35%;
+    width: 45px;
+}
+
+@keyframes leafMove {
+    0%   { transform: translateY(0) rotate(0deg); }
+    50%  { transform: translateY(-18px) rotate(10deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* --------------------------------------------------------------------------
+   15. RESPONSIVE DESIGN & MOBILE OPTIMIZATIONS
+   -------------------------------------------------------------------------- */
+@media (max-width: 992px) {
+    .hero-title {
+        font-size: 50px;
+    }
+
+    .hero-text {
+        width: 85%;
+        font-size: 1.1rem;
+    }
+
+    .hero-image {
+        width: 500px;
+        margin-top: 30px;
+    }
+
+    .hero-card {
+        margin-top: -60px;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .hero-section {
+        padding-top: 50px;
+        padding-bottom: 90px;
+    }
+
+    .hero-title {
+        font-size: 38px;
+        line-height: 1.2;
+    }
+
+    .hero-text {
+        width: 100%;
+        font-size: 1rem;
+    }
+
+    .hero-image {
+        width: 100%;
+        max-width: 360px;
+        margin-top: 30px;
+    }
+
+    .leaf {
+        display: none;
+    }
+
+    .hero-card {
+        margin-top: 20px;
+        padding: 20px;
+    }
+
+    .feature-box {
+        border-right: none !important;
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 20px 10px;
+    }
+
+    .feature-box:last-child {
+        border-bottom: none;
+    }
+
+    .stat-item {
+        border-right: none !important;
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 20px;
+    }
+
+    .stat-item:last-child {
+        border-bottom: none;
+    }
+
+    .stat-item h2 {
+        font-size: 36px;
+    }
+
+    .ayur-toast {
+        min-width: 280px;
+        max-width: 90vw;
+    }
+
+    .table thead th,
+    .table tbody td {
+        padding: 0.75rem 0.85rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 32px;
+    }
+
+    .hero-badge {
+        font-size: 0.78rem;
+        padding: 8px 18px;
+    }
+}

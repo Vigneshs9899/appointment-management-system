@@ -1,0 +1,832 @@
+{% extends "base.html" %}
+
+{% block title %}
+Clinical Consultation: {{ appointment[1] }} | Shayure Ayurveda
+{% endblock %}
+
+{% block css %}
+<style>
+/* ==========================================================================
+   Ayurvedic Clinical Consultation Interface Styling
+   ========================================================================== */
+:root {
+    --ayur-primary: #1b4332;
+    --ayur-primary-dark: #0f281e;
+    --ayur-primary-light: #2d6a4f;
+    --ayur-accent: #40916c;
+    --ayur-subtle: #d8f3dc;
+    --ayur-mint: #e8f5e9;
+    --ayur-gold: #c9933b;
+    --ayur-gold-light: #fef7ec;
+    --ayur-terra: #b85d38;
+    --ayur-terra-light: #fcedea;
+    --ayur-canvas: #fbf9f5;
+    --ayur-surface: #ffffff;
+    --ayur-text: #192a20;
+    --ayur-muted: #5e6d64;
+    --ayur-border: #e6e2da;
+    --ayur-radius-sm: 8px;
+    --ayur-radius-md: 14px;
+    --ayur-radius-lg: 20px;
+    --ayur-shadow-sm: 0 4px 12px rgba(27, 67, 50, 0.05);
+    --ayur-shadow-md: 0 10px 30px rgba(27, 67, 50, 0.08);
+    --ayur-shadow-lg: 0 18px 45px rgba(27, 67, 50, 0.12);
+}
+
+body {
+    background-color: var(--ayur-canvas) !important;
+    color: var(--ayur-text);
+    padding-bottom: 90px; /* Space for sticky action bar */
+}
+
+/* Patient Consultation Banner */
+.consult-banner {
+    background: linear-gradient(135deg, #163628 0%, #1b4332 55%, #2d6a4f 100%);
+    border-radius: var(--ayur-radius-lg);
+    color: #ffffff;
+    padding: 1.75rem 2.25rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--ayur-shadow-md);
+    margin-bottom: 1.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.consult-banner h1,
+.consult-banner h2,
+.consult-banner h3,
+.consult-banner h4 {
+    color: #ffffff !important;
+}
+
+.consult-banner::after {
+    content: "🌿";
+    position: absolute;
+    right: 1.5rem;
+    bottom: -2rem;
+    font-size: 8rem;
+    opacity: 0.07;
+    pointer-events: none;
+    line-height: 1;
+}
+
+.patient-profile-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #c9933b 0%, #e0aa53 100%);
+    color: #120e06;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 16px rgba(201, 147, 59, 0.35);
+    flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.consult-card {
+    background: var(--ayur-surface);
+    border: 1px solid var(--ayur-border);
+    border-radius: var(--ayur-radius-md);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--ayur-shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.consult-card:hover {
+    box-shadow: var(--ayur-shadow-md);
+    border-color: rgba(45, 106, 79, 0.2);
+}
+
+.consult-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.15rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--ayur-border);
+}
+
+.consult-card-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--ayur-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Quick Insertion Pill Buttons */
+.helper-chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.65rem;
+    margin-bottom: 0.5rem;
+}
+
+.helper-chip {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50rem;
+    border: 1px solid var(--ayur-border);
+    background: #faf8f5;
+    color: var(--ayur-primary);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.helper-chip:hover {
+    background: var(--ayur-primary);
+    color: #ffffff;
+    border-color: var(--ayur-primary);
+    transform: translateY(-1px);
+}
+
+.helper-chip-terra {
+    background: #fdf2ed;
+    color: #b85d38;
+    border-color: #f7cfc2;
+}
+
+.helper-chip-terra:hover {
+    background: #b85d38;
+    color: #ffffff;
+    border-color: #b85d38;
+}
+
+.helper-chip-gold {
+    background: #fef7ec;
+    color: #9c6e1e;
+    border-color: #f1ddb2;
+}
+
+.helper-chip-gold:hover {
+    background: #c9933b;
+    color: #ffffff;
+    border-color: #c9933b;
+}
+
+/* Interactive Dosha / Pariksha Selector Buttons */
+.pariksha-btn-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+}
+
+.pariksha-toggle-btn {
+    border: 1.5px solid var(--ayur-border);
+    border-radius: var(--ayur-radius-sm);
+    padding: 0.65rem 0.75rem;
+    background: #ffffff;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ayur-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pariksha-toggle-btn:hover {
+    border-color: var(--ayur-accent);
+    background: rgba(216, 243, 220, 0.2);
+}
+
+.pariksha-toggle-btn.active {
+    border-color: var(--ayur-primary);
+    background: var(--ayur-primary);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(27, 67, 50, 0.2);
+}
+
+/* Form Controls Inside Consultation */
+.ayur-textarea {
+    border: 1.5px solid var(--ayur-border);
+    border-radius: var(--ayur-radius-sm);
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+    resize: vertical;
+    width: 100%;
+}
+
+.ayur-textarea:focus {
+    border-color: var(--ayur-accent);
+    box-shadow: 0 0 0 3px rgba(64, 145, 108, 0.15);
+    outline: none;
+}
+
+/* Sticky Action Bar at Bottom */
+.consult-sticky-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--ayur-border);
+    padding: 0.9rem 1.5rem;
+    z-index: 1040;
+    box-shadow: 0 -8px 25px rgba(27, 67, 50, 0.08);
+}
+
+.btn-save-consult {
+    background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
+    color: #ffffff !important;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--ayur-radius-md);
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 4px 14px rgba(27, 67, 50, 0.3);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-save-consult:hover {
+    background: linear-gradient(135deg, #143527 0%, #22533e 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(27, 67, 50, 0.4);
+}
+
+.btn-save-report {
+    background: linear-gradient(135deg, #c9933b 0%, #e0aa53 100%);
+    color: #1a160c !important;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--ayur-radius-md);
+    padding: 0.75rem 1.4rem;
+    box-shadow: 0 4px 14px rgba(201, 147, 59, 0.3);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-save-report:hover {
+    background: linear-gradient(135deg, #d49f47 0%, #e8b663 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(201, 147, 59, 0.4);
+}
+
+/* Symptoms Intake Box */
+.symptoms-callout {
+    background: #faf7f0;
+    border-left: 4px solid var(--ayur-gold);
+    border-radius: 0 var(--ayur-radius-sm) var(--ayur-radius-sm) 0;
+    padding: 1rem 1.25rem;
+    font-size: 0.95rem;
+    color: #3d5045;
+    position: relative;
+}
+
+.status-badge-lg {
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.45rem 1rem;
+    border-radius: 50rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- Breadcrumb Bar -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="/" class="text-secondary fw-medium">Home</a></li>
+            <li class="breadcrumb-item"><a href="/doctor" class="text-secondary fw-medium">Doctor Dashboard</a></li>
+            <li class="breadcrumb-item active fw-bold" aria-current="page" style="color: #123624 !important;">
+                Clinical Consultation #AYUR-{{ appointment[0] }}
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Patient Header / Summary Banner -->
+    <div class="consult-banner" data-aos="fade-up">
+        <div class="row align-items-center g-3">
+            
+            <!-- Patient Identity -->
+            <div class="col-lg-7">
+                <div class="d-flex align-items-center gap-3">
+                    
+                    {# Compute initials safely #}
+                    {% set words = appointment[1].split() if appointment[1] else ['P'] %}
+                    {% set initial1 = words[0][0] if words[0] else 'P' %}
+                    {% set initial2 = words[1][0] if words|length > 1 and words[1] else '' %}
+                    {% set initials = (initial1 + initial2)|upper %}
+
+                    <div class="patient-profile-avatar">
+                        {{ initials }}
+                    </div>
+
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                            <span class="badge bg-white text-dark small fw-bold">
+                                #AYUR-{{ appointment[0] }}
+                            </span>
+                            
+                            {% set cur_status = appointment[5] or "Pending" %}
+                            {% if cur_status == "Pending" %}
+                                <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Pending</span>
+                            {% elif cur_status == "Completed" %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>Completed</span>
+                            {% elif cur_status == "Cancelled" %}
+                                <span class="badge bg-danger"><i class="bi bi-x-circle-fill me-1"></i>Cancelled</span>
+                            {% else %}
+                                <span class="badge bg-info text-dark">{{ cur_status }}</span>
+                            {% endif %}
+                        </div>
+
+                        <h2 class="mb-0 fw-bold font-serif text-white" style="font-family: 'Playfair Display', Georgia, serif; color: #ffffff !important;">
+                            {{ appointment[1] }}
+                        </h2>
+                        
+                        <div class="small mt-1" style="color: rgba(255, 255, 255, 0.92);">
+                            <span><i class="bi bi-person-badge me-1"></i> Attending: {% if appointment[2] and appointment[2].startswith('Dr.') %}{{ appointment[2] }}{% else %}Dr. {{ appointment[2] }}{% endif %}</span>
+                            <span class="mx-2">•</span>
+                            <span><i class="bi bi-calendar-event me-1"></i> Slot: {{ appointment[3] }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Action Links -->
+            <div class="col-lg-5 text-lg-end">
+                <div class="d-flex flex-wrap justify-content-lg-end gap-2">
+                    <button type="button" class="btn btn-outline-light btn-sm px-3" onclick="window.print()">
+                        <i class="bi bi-printer me-1"></i> Print Sheet
+                    </button>
+                    <a href="/report/{{ appointment[0] }}" class="btn btn-outline-light btn-sm px-3" target="_blank">
+                        <i class="bi bi-file-earmark-medical me-1"></i> Patient Report
+                    </a>
+                    <a href="/report/{{ appointment[0] }}/pdf" class="btn btn-warning btn-sm text-dark px-3 fw-bold">
+                        <i class="bi bi-file-earmark-pdf me-1"></i> Export PDF
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Main Consultation Clinical Form -->
+    <form method="POST" action="/consultation/{{ appointment[0] }}" id="consultationMainForm">
+        
+        <div class="row g-4">
+
+            <!-- ===============================================================
+                 LEFT COLUMN: Rogi & Roga Pariksha (Assessment & Diagnosis)
+                 =============================================================== -->
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="50">
+
+                <!-- 1. Patient Intake & Chief Complaints -->
+                <div class="consult-card">
+                    <div class="consult-card-header">
+                        <h5 class="consult-card-title">
+                            <i class="bi bi-chat-square-quote text-success"></i>
+                            <span>Chief Symptoms & Patient Complaint</span>
+                        </h5>
+                        <span class="badge bg-light text-muted border small">Intake Record</span>
+                    </div>
+
+                    <div class="symptoms-callout mb-2">
+                        {% if appointment[7] %}
+                            <p class="mb-0 fw-medium text-dark">"{{ appointment[7] }}"</p>
+                        {% else %}
+                            <p class="mb-0 text-muted fst-italic">No initial symptoms recorded during booking.</p>
+                        {% endif %}
+                    </div>
+                    <div class="form-text small text-muted">
+                        Recorded at time of intake. Use the diagnostic fields below to record detailed pulse & clinical findings.
+                    </div>
+                </div>
+
+                <!-- 2. Prakriti & Ashtavidha Pariksha (Ayurvedic Clinical Exam) -->
+                <div class="consult-card">
+                    <div class="consult-card-header">
+                        <h5 class="consult-card-title">
+                            <i class="bi bi-flower1 text-warning"></i>
+                            <span>Prakriti & Pulse Assessment (Nadi Pariksha)</span>
+                        </h5>
+                        <button type="button" class="btn btn-sm btn-outline-success py-0 px-2" id="btnApplyParikshaToNotes" title="Append these findings into Clinical Notes">
+                            <i class="bi bi-plus-circle me-1"></i> Add to Notes
+                        </button>
+                    </div>
+
+                    <!-- Dosha Imbalance Selection -->
+                    <label class="form-label small mb-1 fw-bold text-muted">
+                        Primary Dosha Imbalance (Vikriti)
+                    </label>
+                    <div class="pariksha-btn-group mb-3" id="doshaToggleGroup">
+                        <div class="pariksha-toggle-btn" data-category="Dosha" data-value="Vata Prakopa (Air/Ether Dominance - Dryness, Pain, Restlessness)">
+                            <i class="bi bi-wind text-info d-block fs-5 mb-1"></i> Vata
+                        </div>
+                        <div class="pariksha-toggle-btn" data-category="Dosha" data-value="Pitta Prakopa (Fire/Water Dominance - Heat, Inflammation, Acidity)">
+                            <i class="bi bi-fire text-danger d-block fs-5 mb-1"></i> Pitta
+                        </div>
+                        <div class="pariksha-toggle-btn" data-category="Dosha" data-value="Kapha Prakopa (Earth/Water Dominance - Congestion, Heaviness, Lethargy)">
+                            <i class="bi bi-droplet-half text-success d-block fs-5 mb-1"></i> Kapha
+                        </div>
+                        <div class="pariksha-toggle-btn active" data-category="Dosha" data-value="Tridosha / Sama (Balanced Constitution with Seasonal Aggravation)">
+                            <i class="bi bi-circle-square text-warning d-block fs-5 mb-1"></i> Tridosha
+                        </div>
+                    </div>
+
+                    <!-- Nadi Pariksha (Pulse Gati) -->
+                    <label class="form-label small mb-1 fw-bold text-muted">
+                        Nadi Gati (Pulse Diagnosis)
+                    </label>
+                    <div class="pariksha-btn-group mb-3" id="nadiToggleGroup">
+                        <div class="pariksha-toggle-btn" data-category="Nadi" data-value="Sarpa Gati (Vata Pulse - Serpentine, fast, erratic)">
+                            🐍 Sarpa (Vata)
+                        </div>
+                        <div class="pariksha-toggle-btn" data-category="Nadi" data-value="Manduka Gati (Pitta Pulse - Frog-like, bounding, warm)">
+                            🐸 Manduka (Pitta)
+                        </div>
+                        <div class="pariksha-toggle-btn" data-category="Nadi" data-value="Hamsa Gati (Kapha Pulse - Swan-like, slow, full)">
+                            🦢 Hamsa (Kapha)
+                        </div>
+                    </div>
+
+                    <!-- Agni (Digestive Fire) & Kostha -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-sm-6">
+                            <label class="form-label small mb-1 fw-bold text-muted">Agni (Digestion)</label>
+                            <select class="form-select form-select-sm" id="selectAgni">
+                                <option value="Samagni (Balanced Metabolism)">Samagni (Balanced)</option>
+                                <option value="Vishamagni (Irregular / Vata)">Vishamagni (Irregular)</option>
+                                <option value="Tikshnagni (Hyper / Pitta)">Tikshnagni (Intense)</option>
+                                <option value="Mandagni (Sluggish / Kapha)">Mandagni (Sluggish)</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label small mb-1 fw-bold text-muted">Kostha (Bowel Pattern)</label>
+                            <select class="form-select form-select-sm" id="selectKostha">
+                                <option value="Madhyama Kostha (Normal Bowel)">Madhyama (Normal)</option>
+                                <option value="Mrudu Kostha (Loose / Sensitive)">Mrudu (Loose)</option>
+                                <option value="Krura Kostha (Constipated / Hard)">Krura (Constipated)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Clinical Diagnosis & Samprapti -->
+                <div class="consult-card">
+                    <div class="consult-card-header">
+                        <h5 class="consult-card-title">
+                            <i class="bi bi-activity text-danger"></i>
+                            <span>Roga Nidana & Samprapti (Diagnosis)</span>
+                        </h5>
+                        <span class="badge bg-light text-muted border small">Required</span>
+                    </div>
+
+                    <!-- Quick Diagnostic Templates -->
+                    <label class="form-label small mb-1 fw-bold text-muted">
+                        Quick Formulation Templates (Click to Insert)
+                    </label>
+                    <div class="helper-chip-group mb-2">
+                        <span class="helper-chip" onclick="insertDiagnosis('Amavata (Rheumatoid / Endotoxin arthritis with Vata-Kapha vitiation)')">
+                            Amavata (Joints)
+                        </span>
+                        <span class="helper-chip" onclick="insertDiagnosis('Amlapitta (Hyperacidity & Pitta-induced gastro-esophageal reflux)')">
+                            Amlapitta (Acidity)
+                        </span>
+                        <span class="helper-chip" onclick="insertDiagnosis('Sandhigata Vata (Degenerative Osteoarthritis & Dhatu Kshaya)')">
+                            Sandhigata Vata
+                        </span>
+                        <span class="helper-chip" onclick="insertDiagnosis('Pranavaha Sroto-Dusthi (Respiratory congestion & Kasa-Shwasa)')">
+                            Kasa & Shwasa
+                        </span>
+                        <span class="helper-chip" onclick="insertDiagnosis('Anidra & Chitta-Udwega (Insomnia & Vata-induced mental stress)')">
+                            Anidra / Stress
+                        </span>
+                        <span class="helper-chip" onclick="insertDiagnosis('Twak Roga / Kushtha (Dermatological Pitta-Kapha imbalance)')">
+                            Twak Roga
+                        </span>
+                    </div>
+
+                    <textarea class="ayur-textarea" name="diagnosis" id="inputDiagnosis" rows="4" placeholder="Enter clinical diagnosis, Samprapti (pathogenesis), Dhatu involvement, and modern clinical correlation..." required>{{ appointment[10] or "" }}</textarea>
+                    <div class="form-text small text-muted">This diagnosis appears on the patient's official Ayurvedic medical record.</div>
+                </div>
+
+            </div>
+
+            <!-- ===============================================================
+                 RIGHT COLUMN: Chikitsa (Prescription) & Pathya-Apathya
+                 =============================================================== -->
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+
+                <!-- 4. Ayurvedic Prescription & Formulations -->
+                <div class="consult-card">
+                    <div class="consult-card-header">
+                        <h5 class="consult-card-title">
+                            <i class="bi bi-capsule-pill text-success"></i>
+                            <span>Chikitsa & Aushadha Vidhi (Prescription)</span>
+                        </h5>
+                        <span class="badge bg-light text-muted border small">Ayurvedic Rx</span>
+                    </div>
+
+                    <!-- Quick Herb / Formulation Inserts -->
+                    <label class="form-label small mb-1 fw-bold text-muted">
+                        Standard Formulations (Click to Add)
+                    </label>
+                    <div class="helper-chip-group mb-2">
+                        <span class="helper-chip helper-chip-gold" onclick="insertPrescription('1. Triphala Churna: 5g at bedtime with lukewarm water.')">
+                            + Triphala Churna
+                        </span>
+                        <span class="helper-chip helper-chip-gold" onclick="insertPrescription('2. Ashwagandha Tablet (500mg): 1 tablet twice daily with warm milk after food.')">
+                            + Ashwagandha
+                        </span>
+                        <span class="helper-chip helper-chip-gold" onclick="insertPrescription('3. Avipattikar Churna: 3g before lunch and dinner with warm water.')">
+                            + Avipattikar
+                        </span>
+                        <span class="helper-chip helper-chip-gold" onclick="insertPrescription('4. Chitrakadi Vati: 1 tablet chewed 15 mins before meals for Agni Deepana.')">
+                            + Chitrakadi Vati
+                        </span>
+                        <span class="helper-chip helper-chip-gold" onclick="insertPrescription('5. Dashamularishta: 20ml mixed with 20ml lukewarm water twice daily after food.')">
+                            + Dashamularishta
+                        </span>
+                        <span class="helper-chip helper-chip-gold" onclick="insertPrescription('6. Brahmi Vati: 1 tablet morning & evening with water or honey.')">
+                            + Brahmi Vati
+                        </span>
+                    </div>
+
+                    <textarea class="ayur-textarea" name="prescription" id="inputPrescription" rows="6" placeholder="Formulation | Dosage | Timing (Pragbhakta / Adhobhakta / Nishikala) | Anupana (Warm water, milk, honey)..." required>{{ appointment[8] or "" }}</textarea>
+                    
+                    <!-- Timing guidelines helper badge -->
+                    <div class="d-flex flex-wrap gap-2 mt-2 pt-2 border-top">
+                        <span class="badge bg-light text-muted border" style="font-size: 0.725rem;">
+                            <strong>Pragbhakta:</strong> Before meals
+                        </span>
+                        <span class="badge bg-light text-muted border" style="font-size: 0.725rem;">
+                            <strong>Adhobhakta:</strong> After meals
+                        </span>
+                        <span class="badge bg-light text-muted border" style="font-size: 0.725rem;">
+                            <strong>Nishikala:</strong> Bedtime
+                        </span>
+                    </div>
+                </div>
+
+                <!-- 5. Pathya & Apathya (Diet & Lifestyle Regimen) & Notes -->
+                <div class="consult-card">
+                    <div class="consult-card-header">
+                        <h5 class="consult-card-title">
+                            <i class="bi bi-egg-fried text-warning"></i>
+                            <span>Pathya / Apathya & Vaidya Clinical Notes</span>
+                        </h5>
+                        <div class="d-flex gap-1">
+                            <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="insertPathyaTemplate()">
+                                + Pathya/Diet
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Regimen Inserts -->
+                    <div class="helper-chip-group mb-2">
+                        <span class="helper-chip helper-chip-terra" onclick="insertDoctorNotes('PATHYA (Foods to Favor): Warm freshly cooked meals, mung dal, spiced buttermilk (Takra), seasonal cooked vegetables, cumin water.')">
+                            + Pathya (Favor)
+                        </span>
+                        <span class="helper-chip helper-chip-terra" onclick="insertDoctorNotes('APATHYA (Strictly Avoid): Cold iced beverages, deep fried snacks, heavy fermentations, night curd, daytime sleeping.')">
+                            + Apathya (Avoid)
+                        </span>
+                        <span class="helper-chip helper-chip-terra" onclick="insertDoctorNotes('VIHAR (Lifestyle Regimen): 15 mins daily Nadi Shodhana Pranayama, warm Abhyanga sesame oil massage, maintain regular sleep by 10 PM.')">
+                            + Vihar (Lifestyle)
+                        </span>
+                    </div>
+
+                    <textarea class="ayur-textarea" name="doctor_notes" id="inputDoctorNotes" rows="4" placeholder="Dietary restrictions (Apathya), recommended wholesome food (Pathya), Dinacharya regimen, and internal Vaidya observations...">{{ appointment[9] or "" }}</textarea>
+                </div>
+
+                <!-- 6. Follow-up & Clinical Status -->
+                <div class="consult-card">
+                    <div class="consult-card-header">
+                        <h5 class="consult-card-title">
+                            <i class="bi bi-calendar2-check text-success"></i>
+                            <span>Follow-Up Scheduling & Status</span>
+                        </h5>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-sm-7">
+                            <label class="form-label small mb-1 fw-bold text-muted" for="followupDate">
+                                Recommended Follow-up Date
+                            </label>
+                            <input type="date" class="form-control" name="followup_date" id="followupDate" value="{{ appointment[6] or '' }}">
+                            
+                            <!-- Quick date adders -->
+                            <div class="d-flex gap-1 mt-2">
+                                <button type="button" class="btn btn-sm btn-light border py-0 px-2 small" onclick="setFollowupDays(7)">+7 Days</button>
+                                <button type="button" class="btn btn-sm btn-light border py-0 px-2 small" onclick="setFollowupDays(14)">+14 Days</button>
+                                <button type="button" class="btn btn-sm btn-light border py-0 px-2 small" onclick="setFollowupDays(21)">+21 Days</button>
+                                <button type="button" class="btn btn-sm btn-light border py-0 px-2 small" onclick="setFollowupDays(30)">+1 Month</button>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-5">
+                            <label class="form-label small mb-1 fw-bold text-muted" for="consultationStatus">
+                                Consultation Status
+                            </label>
+                            <select class="form-select" name="status" id="consultationStatus">
+                                <option value="Completed" {% if appointment[5] == "Completed" or not appointment[5] %}selected{% endif %}>
+                                    Completed
+                                </option>
+                                <option value="Pending" {% if appointment[5] == "Pending" %}selected{% endif %}>
+                                    Pending Review
+                                </option>
+                                <option value="Cancelled" {% if appointment[5] == "Cancelled" %}selected{% endif %}>
+                                    Cancelled
+                                </option>
+                            </select>
+                            <div class="form-text small text-muted">Mark 'Completed' once prescription is finalized.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ===================================================================
+             STICKY ACTION BAR (Save & View Actions)
+             =================================================================== -->
+        <div class="consult-sticky-bar">
+            <div class="container d-flex flex-wrap align-items-center justify-content-between gap-3">
+                
+                <div class="d-none d-md-flex align-items-center gap-2">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 fw-bold">
+                        🌿 Patient: {{ appointment[1] }}
+                    </span>
+                    <span class="text-muted small">
+                        Session Active • Doctor: {% if appointment[2] and appointment[2].startswith('Dr.') %}{{ appointment[2] }}{% else %}Dr. {{ appointment[2] }}{% endif %}
+                    </span>
+                </div>
+
+                <div class="d-flex align-items-center gap-2 ms-auto">
+                    <a href="/doctor" class="btn btn-light px-3">
+                        <i class="bi bi-arrow-left me-1"></i> Dashboard
+                    </a>
+
+                    <button type="submit" class="btn btn-save-consult" id="btnSaveConsultation">
+                        <i class="bi bi-check2-circle fs-5"></i>
+                        <span>Save Consultation</span>
+                    </button>
+
+                    <button type="button" class="btn btn-save-report" id="btnSaveAndReport">
+                        <i class="bi bi-file-earmark-medical fs-5"></i>
+                        <span>Save & Generate Report</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// -----------------------------------------------------------------------------
+// Interactive Helper Script for Consultation Management
+// -----------------------------------------------------------------------------
+
+// Quick Insert: Diagnosis
+function insertDiagnosis(text) {
+    const el = document.getElementById("inputDiagnosis");
+    if (!el) return;
+    if (el.value.trim().length === 0) {
+        el.value = text;
+    } else {
+        el.value = el.value.trim() + "\n" + text;
+    }
+    el.focus();
+}
+
+// Quick Insert: Prescription
+function insertPrescription(text) {
+    const el = document.getElementById("inputPrescription");
+    if (!el) return;
+    if (el.value.trim().length === 0) {
+        el.value = text;
+    } else {
+        el.value = el.value.trim() + "\n" + text;
+    }
+    el.focus();
+}
+
+// Quick Insert: Doctor Notes / Pathya / Apathya
+function insertDoctorNotes(text) {
+    const el = document.getElementById("inputDoctorNotes");
+    if (!el) return;
+    if (el.value.trim().length === 0) {
+        el.value = text;
+    } else {
+        el.value = el.value.trim() + "\n\n" + text;
+    }
+    el.focus();
+}
+
+function insertPathyaTemplate() {
+    const template = "PATHYA (Wholesome Regimen):\n- Fresh warm mung soup, aged rice (Shali), bottle gourd, pomegranate.\n- Drink lukewarm boiled water infused with dry ginger or coriander.\n\nAPATHYA (Restricted Items):\n- Avoid spicy, deeply fried, oily, or stale items.\n- Abstain from cold drinks, curd at night, and daytime sleep.";
+    insertDoctorNotes(template);
+}
+
+// Set Follow-up Date dynamically
+function setFollowupDays(days) {
+    const dateInput = document.getElementById("followupDate");
+    if (!dateInput) return;
+    const target = new Date();
+    target.setDate(target.getDate() + days);
+    const pad = (n) => String(n).padStart(2, '0');
+    const formatted = `${target.getFullYear()}-${pad(target.getMonth() + 1)}-${pad(target.getDate())}`;
+    dateInput.value = formatted;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Toggle button active states for Pariksha selectors
+    const toggleButtons = document.querySelectorAll(".pariksha-toggle-btn");
+    toggleButtons.forEach(btn => {
+        btn.addEventListener("click", function () {
+            const parent = this.parentElement;
+            if (parent) {
+                parent.querySelectorAll(".pariksha-toggle-btn").forEach(b => b.classList.remove("active"));
+            }
+            this.classList.add("active");
+        });
+    });
+
+    // Append Pariksha Findings into Doctor Notes
+    const btnApplyPariksha = document.getElementById("btnApplyParikshaToNotes");
+    if (btnApplyPariksha) {
+        btnApplyPariksha.addEventListener("click", function () {
+            const activeDosha = document.querySelector("#doshaToggleGroup .pariksha-toggle-btn.active");
+            const activeNadi = document.querySelector("#nadiToggleGroup .pariksha-toggle-btn.active");
+            const agniSelect = document.getElementById("selectAgni");
+            const kosthaSelect = document.getElementById("selectKostha");
+
+            let summary = "AYURVEDIC CLINICAL EXAMINATION FINDINGS:\n";
+            if (activeDosha) summary += `• Prakriti/Vikriti: ${activeDosha.getAttribute("data-value")}\n`;
+            if (activeNadi) summary += `• Nadi Pariksha: ${activeNadi.getAttribute("data-value")}\n`;
+            if (agniSelect) summary += `• Agni (Digestion): ${agniSelect.value}\n`;
+            if (kosthaSelect) summary += `• Kostha (Bowel Pattern): ${kosthaSelect.value}\n`;
+
+            insertDoctorNotes(summary);
+            if (window.showAyurToast) {
+                window.showAyurToast("Clinical examination findings appended to Doctor Notes!", "success");
+            }
+        });
+    }
+
+    // Save & Generate Report action
+    const btnSaveAndReport = document.getElementById("btnSaveAndReport");
+    const consultationForm = document.getElementById("consultationMainForm");
+    if (btnSaveAndReport && consultationForm) {
+        btnSaveAndReport.addEventListener("click", async function (e) {
+            e.preventDefault();
+            
+            // Mark status as completed
+            const statusSelect = document.getElementById("consultationStatus");
+            if (statusSelect) statusSelect.value = "Completed";
+
+            btnSaveAndReport.disabled = true;
+            btnSaveAndReport.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Saving & Generating...`;
+
+            // Submit form via fetch
+            const formData = new FormData(consultationForm);
+            try {
+                const response = await fetch(consultationForm.action, {
+                    method: "POST",
+                    body: formData
+                });
+                // Once saved, navigate directly to patient report
+                window.location.href = "/report/{{ appointment[0] }}";
+            } catch (err) {
+                console.warn("Async save error, falling back to standard submit:", err);
+                consultationForm.submit();
+            }
+        });
+    }
+
+});
+</script>
+{% endblock %}

@@ -1,0 +1,1210 @@
+{% extends "base.html" %}
+
+{% block title %}
+Shayure Ayurveda — Classical Panchakarma & Natural Healing Sanctuary
+{% endblock %}
+
+{% block css %}
+<style>
+/* Landing Page Editorial & Botanical Accents */
+.hero-section {
+    background: radial-gradient(120% 80% at 50% 0%, #edf6f0 0%, #fbf9f5 70%);
+    padding: 3.5rem 0 4.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    background: #e7f4ec;
+    color: #1b4332;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border: 1px solid rgba(45, 106, 79, 0.15);
+}
+
+.badge-dot {
+    width: 8px;
+    height: 8px;
+    background: #40916c;
+    border-radius: 50%;
+    margin-right: 8px;
+    display: inline-block;
+    box-shadow: 0 0 0 3px rgba(64, 145, 108, 0.2);
+}
+
+.hero-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 3.25rem;
+    font-weight: 700;
+    line-height: 1.15;
+    color: #192a20;
+    margin-top: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.highlight-text {
+    color: #2d6a4f;
+    font-style: italic;
+    background: linear-gradient(120deg, #1b4332 0%, #40916c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-text {
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: #526359;
+    max-width: 560px;
+}
+
+.trust-pill {
+    background: #ffffff;
+    border: 1px solid rgba(45, 106, 79, 0.12);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #1b4332;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.hero-image-wrapper {
+    max-width: 520px;
+}
+
+.hero-image {
+    max-height: 480px;
+    object-fit: contain;
+    animation: gentleFloat 6s ease-in-out infinite;
+    filter: drop-shadow(0 20px 30px rgba(27, 67, 50, 0.12));
+}
+
+@keyframes gentleFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+}
+
+.floating-badge {
+    position: absolute;
+    background: #ffffff;
+    padding: 12px 18px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid rgba(27, 67, 50, 0.08);
+    z-index: 2;
+}
+
+.badge-top-right {
+    top: 10%;
+    right: -10px;
+}
+
+.badge-bottom-left {
+    bottom: 8%;
+    left: -10px;
+}
+
+.badge-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #e7f4ec;
+    color: #1b4332;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.badge-icon.gold {
+    background: #fdf6ea;
+    color: #c9933b;
+}
+
+.floating-badge strong {
+    display: block;
+    font-size: 1.15rem;
+    color: #192a20;
+    line-height: 1.1;
+}
+
+.floating-badge small {
+    font-size: 0.75rem;
+    color: #718378;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.leaf {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.55;
+    z-index: 0;
+}
+
+.leaf1 { top: 12%; left: 3%; width: 55px; animation: gentleFloat 8s ease-in-out infinite; }
+.leaf2 { top: 22%; right: 4%; width: 75px; animation: gentleFloat 9s ease-in-out infinite 1s; }
+.leaf3 { bottom: 15%; left: 6%; width: 45px; animation: gentleFloat 7s ease-in-out infinite 2s; }
+
+/* Doctor Trust Card */
+.doctor-trust-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(45, 106, 79, 0.15);
+    box-shadow: 0 4px 15px rgba(27, 67, 50, 0.04);
+    max-width: 440px;
+}
+
+.trust-avatar img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border: 2px solid #40916c;
+}
+
+/* Stats Counter Bar */
+.stats-bar-section {
+    margin-top: -30px;
+    position: relative;
+    z-index: 3;
+}
+
+.stats-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 30px 20px;
+    box-shadow: 0 15px 35px rgba(27, 67, 50, 0.06);
+    border: 1px solid rgba(27, 67, 50, 0.06);
+}
+
+.stat-item {
+    padding: 10px 15px;
+}
+
+.stat-item:not(:last-child) {
+    border-right: 1px solid #f0eee9;
+}
+
+.stat-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 12px;
+    background: #edf6f0;
+    color: #2d6a4f;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+}
+
+.stat-number {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #1b4332;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    color: #63776d;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+/* Section Common Typography */
+.bg-canvas {
+    background-color: #fbf9f5;
+}
+
+.section-header {
+    max-width: 680px;
+}
+
+.sub-title {
+    display: inline-block;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    color: #c9933b;
+    margin-bottom: 0.5rem;
+}
+
+.section-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.35rem;
+    font-weight: 700;
+    color: #192a20;
+    line-height: 1.25;
+}
+
+/* Dosha Cards */
+.dosha-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dosha-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 35px rgba(27, 67, 50, 0.08) !important;
+}
+
+.dosha-card.vata { border-top: 4px solid #7ea8be; }
+.dosha-card.pitta { border-top: 4px solid #b85d38; }
+.dosha-card.kapha { border-top: 4px solid #40916c; }
+
+.dosha-tag {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: #f0f4f1;
+    color: #3b5346;
+}
+
+.dosha-icon {
+    font-size: 2.5rem;
+}
+
+.dosha-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.45rem;
+    color: #192a20;
+    margin-bottom: 0.75rem;
+}
+
+.dosha-desc {
+    color: #5c6f64;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+}
+
+.dosha-features li {
+    font-size: 0.875rem;
+    color: #3f5247;
+    margin-bottom: 0.45rem;
+}
+
+/* Treatment Cards */
+.treatment-card {
+    background: #ffffff;
+    border: 1px solid rgba(27, 67, 50, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.treatment-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 30px rgba(27, 67, 50, 0.09) !important;
+}
+
+.treatment-icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin-bottom: 1.25rem;
+}
+
+.bg-emerald-subtle { background-color: #e7f4ec; }
+.text-emerald { color: #1b4332; }
+.bg-gold-subtle { background-color: #fdf6ea; }
+.text-gold { color: #c9933b; }
+.bg-terra-subtle { background-color: #faede8; }
+.text-terra { color: #b85d38; }
+
+.treatment-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: #192a20;
+    margin-bottom: 0.6rem;
+}
+
+.treatment-desc {
+    color: #5c6f64;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+}
+
+.treatment-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Doctor Portrait Frame */
+.doctor-portrait-frame {
+    max-width: 380px;
+}
+
+.doctor-main-img {
+    border: 6px solid #ffffff;
+    box-shadow: 0 20px 45px rgba(27, 67, 50, 0.12);
+}
+
+.doctor-seal-chip {
+    position: absolute;
+    bottom: -15px;
+    right: 20px;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(27, 67, 50, 0.1);
+}
+
+.spec-bullet {
+    background: #ffffff;
+    border: 1px solid rgba(27, 67, 50, 0.08);
+}
+
+.vaidya-quote {
+    color: #1b4332;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Step Cards */
+.step-card {
+    background: #ffffff;
+    border: 1px solid rgba(27, 67, 50, 0.08);
+    position: relative;
+    transition: transform 0.25s ease;
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+}
+
+.step-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #d1dfd6;
+}
+
+.step-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: #edf6f0;
+    color: #1b4332;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+}
+
+/* Testimonial Cards */
+.testimonial-card {
+    border: 1px solid rgba(27, 67, 50, 0.08);
+}
+
+.stars {
+    color: #c9933b;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+}
+
+.author-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 0.95rem;
+}
+
+/* Custom Accordion */
+.custom-accordion .accordion-item {
+    border: 1px solid rgba(27, 67, 50, 0.1);
+}
+
+.custom-accordion .accordion-button {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    color: #192a20;
+    background-color: #ffffff;
+    padding: 18px 22px;
+}
+
+.custom-accordion .accordion-button:not(.collapsed) {
+    background-color: #edf6f0;
+    color: #1b4332;
+    box-shadow: none;
+}
+
+.custom-accordion .accordion-body {
+    background-color: #ffffff;
+    line-height: 1.7;
+    padding: 18px 22px;
+}
+
+/* Contact Section & Forms */
+.brand-icon-lg {
+    font-size: 2.2rem;
+}
+
+.contact-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #edf6f0;
+    color: #1b4332;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+/* CTA Banner */
+.cta-banner {
+    background: linear-gradient(135deg, #163628 0%, #1b4332 60%, #2d6a4f 100%);
+    color: #ffffff !important;
+}
+
+.cta-banner h1,
+.cta-banner h2,
+.cta-banner h3,
+.cta-banner .display-6 {
+    color: #ffffff !important;
+}
+
+.cta-banner p.lead {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.max-w-700 {
+    max-width: 700px;
+}
+
+/* Custom Button utilities that match both old & new style.css */
+.btn-primary-custom {
+    background-color: #1b4332;
+    color: #ffffff;
+    border: 1px solid #1b4332;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.25s ease;
+}
+
+.btn-primary-custom:hover {
+    background-color: #2d6a4f;
+    border-color: #2d6a4f;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(27, 67, 50, 0.2);
+}
+
+.btn-outline-custom {
+    background-color: transparent;
+    color: #1b4332;
+    border: 1.5px solid #1b4332;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.25s ease;
+}
+
+.btn-outline-custom:hover {
+    background-color: #1b4332;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero-section position-relative overflow-hidden">
+    <!-- Decorative Floating Leaves -->
+    <img src="{{ url_for('static', filename='images/leaf1.png') }}" class="leaf leaf1" alt="Decorative leaf" aria-hidden="true">
+    <img src="{{ url_for('static', filename='images/leaf2.png') }}" class="leaf leaf2" alt="Decorative leaf" aria-hidden="true">
+    <img src="{{ url_for('static', filename='images/leaf3.png') }}" class="leaf leaf3" alt="Decorative leaf" aria-hidden="true">
+
+    <div class="container py-4 position-relative z-1">
+        <div class="row align-items-center min-vh-75 py-3">
+            <div class="col-lg-6 pe-lg-5" data-aos="fade-right">
+                <div class="hero-badge mb-3">
+                    <span class="badge-dot"></span>
+                    <i class="bi bi-flower1 me-1"></i> 5,000-Year Ancient Wisdom • Modern Clinical Rigor
+                </div>
+
+                <h1 class="hero-title">
+                    Restore Natural Balance to <span class="highlight-text">Body, Mind & Soul</span>
+                </h1>
+
+                <p class="hero-text">
+                    Welcome to Shayure Ayurveda. We specialize in root-cause healing through personalized Tridosha diagnosis, certified Kerala Panchakarma, and pure botanical pharmacopeia.
+                </p>
+
+                <!-- Key Trust Bullets -->
+                <div class="d-flex flex-wrap gap-2 mb-4 trust-pills">
+                    <span class="trust-pill"><i class="bi bi-patch-check-fill text-success me-1"></i> AYUSH Standard Protocols</span>
+                    <span class="trust-pill"><i class="bi bi-shield-fill-check text-success me-1"></i> 100% Classical Herbal Formulations</span>
+                    <span class="trust-pill"><i class="bi bi-heart-pulse-fill text-success me-1"></i> Nadi Pariksha Pulse Diagnosis</span>
+                </div>
+
+                <div class="d-flex flex-wrap gap-3 pt-2">
+                    {% if session and session.get('user') %}
+                        {% if session.get('role') == 'doctor' %}
+                            <a href="/doctor" class="btn btn-primary-custom btn-lg px-4 shadow">
+                                <i class="bi bi-speedometer2 me-2"></i> Doctor Dashboard
+                            </a>
+                        {% else %}
+                            <a href="/dashboard" class="btn btn-primary-custom btn-lg px-4 shadow">
+                                <i class="bi bi-calendar2-plus me-2"></i> Book Appointment Now
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="/login" class="btn btn-primary-custom btn-lg px-4 shadow">
+                            <i class="bi bi-calendar2-plus me-2"></i> Book Consultation
+                        </a>
+                        <a href="/signup" class="btn btn-outline-custom btn-lg px-4">
+                            <i class="bi bi-person-plus me-2"></i> Register Account
+                        </a>
+                    {% endif %}
+                </div>
+
+                <!-- Doctor Trust Note -->
+                <div class="doctor-trust-card mt-4 p-3 rounded-3 d-flex align-items-center gap-3">
+                    <div class="trust-avatar">
+                        <img src="{{ url_for('static', filename='images/about-pic.png') }}" alt="Dr. Shanmuga Loga" class="rounded-circle">
+                    </div>
+                    <div>
+                        <div class="fw-bold text-dark mb-0">Dr. Shanmuga Loga, BAMS, MD (Ayu)</div>
+                        <small class="text-muted">Chief Ayurvedic Physician • 12+ Yrs Clinical Experience</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 text-center mt-5 mt-lg-0" data-aos="fade-left">
+                <div class="hero-image-wrapper position-relative mx-auto">
+                    <img src="{{ url_for('static', filename='images/hero-ayurveda.png') }}" class="hero-image img-fluid" alt="Ayurvedic Natural Healing Herbs and Oil">
+                    
+                    <!-- Floating Stat Badge 1 -->
+                    <div class="floating-badge badge-top-right shadow">
+                        <div class="badge-icon"><i class="bi bi-people-fill"></i></div>
+                        <div>
+                            <strong>15,000+</strong>
+                            <small>Patients Healed</small>
+                        </div>
+                    </div>
+
+                    <!-- Floating Stat Badge 2 -->
+                    <div class="floating-badge badge-bottom-left shadow">
+                        <div class="badge-icon gold"><i class="bi bi-star-fill"></i></div>
+                        <div>
+                            <strong>4.9 / 5.0</strong>
+                            <small>Clinical Rating</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trust Metric Counters -->
+<section class="py-4 stats-bar-section">
+    <div class="container">
+        <div class="stats-card shadow-sm">
+            <div class="row g-4 text-center">
+                <div class="col-6 col-md-3 stat-item">
+                    <div class="stat-icon-wrapper"><i class="bi bi-heart-pulse"></i></div>
+                    <h2 class="stat-number">15,000+</h2>
+                    <p class="stat-label">Consultations Completed</p>
+                </div>
+                <div class="col-6 col-md-3 stat-item">
+                    <div class="stat-icon-wrapper"><i class="bi bi-award"></i></div>
+                    <h2 class="stat-number">12+</h2>
+                    <p class="stat-label">Years Clinical Rigor</p>
+                </div>
+                <div class="col-6 col-md-3 stat-item">
+                    <div class="stat-icon-wrapper"><i class="bi bi-droplet"></i></div>
+                    <h2 class="stat-number">100%</h2>
+                    <p class="stat-label">Pure Herb Extracts</p>
+                </div>
+                <div class="col-6 col-md-3 stat-item">
+                    <div class="stat-icon-wrapper"><i class="bi bi-shield-check"></i></div>
+                    <h2 class="stat-number">98.4%</h2>
+                    <p class="stat-label">Recovery & Satisfaction</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= DOSHA PHILOSOPHY ================= -->
+<section id="doshas" class="py-5 bg-canvas" data-aos="fade-up">
+    <div class="container py-4">
+        <div class="section-header text-center mx-auto mb-5">
+            <span class="sub-title">Tridosha Bio-Energetic Harmony</span>
+            <h2 class="section-title">The Three Pillars of Ayurvedic Balance</h2>
+            <p class="text-muted">In classical Ayurveda, your unique mind-body constitution (Prakriti) is composed of three vital energies. Health is the dynamic harmony of these forces.</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Vata Card -->
+            <div class="col-md-4">
+                <div class="dosha-card vata h-100 shadow-sm p-4 rounded-4 position-relative">
+                    <div class="dosha-tag">Air & Space</div>
+                    <div class="dosha-icon mb-3">💨</div>
+                    <h3 class="dosha-title">Vata Dosha</h3>
+                    <p class="dosha-desc">Governs all biological movement, nerve impulses, respiration, and cellular circulation. When aggravated, it causes joint aches, anxiety, insomnia, and dryness.</p>
+                    <ul class="dosha-features list-unstyled">
+                        <li><i class="bi bi-check2 text-success me-2"></i> Balanced with warm sesame oil</li>
+                        <li><i class="bi bi-check2 text-success me-2"></i> Nourishing, grounding foods</li>
+                        <li><i class="bi bi-check2 text-success me-2"></i> Gentle restorative routines</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Pitta Card -->
+            <div class="col-md-4">
+                <div class="dosha-card pitta h-100 shadow-sm p-4 rounded-4 position-relative">
+                    <div class="dosha-tag">Fire & Water</div>
+                    <div class="dosha-icon mb-3">🔥</div>
+                    <h3 class="dosha-title">Pitta Dosha</h3>
+                    <p class="dosha-desc">Governs digestion (Agni), metabolism, body temperature, and intelligence. Imbalance manifests as hyperacidity, skin rashes, inflammation, and irritability.</p>
+                    <ul class="dosha-features list-unstyled">
+                        <li><i class="bi bi-check2 text-success me-2"></i> Cooled with Ghritham & Amalaki</li>
+                        <li><i class="bi bi-check2 text-success me-2"></i> Sweet, bitter & cooling diet</li>
+                        <li><i class="bi bi-check2 text-success me-2"></i> Stress-release pranayama</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Kapha Card -->
+            <div class="col-md-4">
+                <div class="dosha-card kapha h-100 shadow-sm p-4 rounded-4 position-relative">
+                    <div class="dosha-tag">Earth & Water</div>
+                    <div class="dosha-icon mb-3">🌊</div>
+                    <h3 class="dosha-title">Kapha Dosha</h3>
+                    <p class="dosha-desc">Provides biological lubrication, structural stability, physical strength, and immunity (Ojas). Excess leads to lethargy, sinus congestion, weight gain, and sluggishness.</p>
+                    <ul class="dosha-features list-unstyled">
+                        <li><i class="bi bi-check2 text-success me-2"></i> Stimulated with Trikatu & herbs</li>
+                        <li><i class="bi bi-check2 text-success me-2"></i> Light, warm & pungent diet</li>
+                        <li><i class="bi bi-check2 text-success me-2"></i> Daily active movement & detox</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= SPECIALIZATIONS & TREATMENTS (anchored as #services) ================= -->
+<section id="services" class="py-5 bg-white" data-aos="fade-up">
+    <div class="container py-4">
+        <div class="section-header text-center mx-auto mb-5">
+            <span class="sub-title">Classical Therapeutics</span>
+            <h2 class="section-title">Specialized Ayurvedic Treatments</h2>
+            <p class="text-muted">Combining time-honored Ayurvedic texts (Charaka & Sushruta Samhita) with clinical precision to eliminate root toxins (Ama).</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Treatment 1: Panchakarma -->
+            <div class="col-md-6 col-lg-4">
+                <div class="treatment-card h-100 shadow-sm rounded-4 p-4">
+                    <div class="treatment-icon-circle bg-emerald-subtle">
+                        <i class="bi bi-droplet-half text-emerald"></i>
+                    </div>
+                    <h4 class="treatment-name">Panchakarma Detox</h4>
+                    <p class="treatment-desc">Five classical detoxifying therapies (Vamana, Virechana, Basti, Nasya, Raktamokshana) designed to eliminate metabolic waste and restore internal homeostasis.</p>
+                    <div class="treatment-meta">
+                        <span class="badge bg-light text-dark border">Root Cause Detox</span>
+                        <span class="badge bg-light text-dark border">7 to 21 Days</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Treatment 2: Shirodhara -->
+            <div class="col-md-6 col-lg-4">
+                <div class="treatment-card h-100 shadow-sm rounded-4 p-4">
+                    <div class="treatment-icon-circle bg-gold-subtle">
+                        <i class="bi bi-moon-stars text-gold"></i>
+                    </div>
+                    <h4 class="treatment-name">Shirodhara & Mental Calm</h4>
+                    <p class="treatment-desc">Continuous pouring of warm medicated herbal oil (Ksheerabala / Brahmi) over the forehead. Unsurpassed for anxiety, migraine, hypertension, and sleep disorders.</p>
+                    <div class="treatment-meta">
+                        <span class="badge bg-light text-dark border">Nervous Reset</span>
+                        <span class="badge bg-light text-dark border">45–60 Mins</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Treatment 3: Herbal Formulation -->
+            <div class="col-md-6 col-lg-4">
+                <div class="treatment-card h-100 shadow-sm rounded-4 p-4">
+                    <div class="treatment-icon-circle bg-terra-subtle">
+                        <i class="bi bi-flower3 text-terra"></i>
+                    </div>
+                    <h4 class="treatment-name">Classical Herbal Pharmacopeia</h4>
+                    <p class="treatment-desc">Personalized botanical decoctions (Kashayams), fermented tonics (Arishtams), and herbal powders (Churnas) prepared from wild-harvested medicinal herbs.</p>
+                    <div class="treatment-meta">
+                        <span class="badge bg-light text-dark border">100% Organic Herbs</span>
+                        <span class="badge bg-light text-dark border">Custom Blends</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Treatment 4: Musculoskeletal & Spine -->
+            <div class="col-md-6 col-lg-4">
+                <div class="treatment-card h-100 shadow-sm rounded-4 p-4">
+                    <div class="treatment-icon-circle bg-emerald-subtle">
+                        <i class="bi bi-activity text-emerald"></i>
+                    </div>
+                    <h4 class="treatment-name">Kati Basti & Spine Therapy</h4>
+                    <p class="treatment-desc">Deep tissue pooling of warm herbalized oils for disc degeneration, sciatica, lumbar spondylosis, and frozen shoulder, combined with Patra Pinda Kizhi.</p>
+                    <div class="treatment-meta">
+                        <span class="badge bg-light text-dark border">Musculoskeletal</span>
+                        <span class="badge bg-light text-dark border">Pain Relief</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Treatment 5: Digestive Health & Agni -->
+            <div class="col-md-6 col-lg-4">
+                <div class="treatment-card h-100 shadow-sm rounded-4 p-4">
+                    <div class="treatment-icon-circle bg-gold-subtle">
+                        <i class="bi bi-capsule text-gold"></i>
+                    </div>
+                    <h4 class="treatment-name">Digestive Health & Agni Reset</h4>
+                    <p class="treatment-desc">Specialized protocol for irritable bowel syndrome (IBS), chronic GERD, fatty liver, and metabolic sluggishness via Deepana-Pachana botanical treatments.</p>
+                    <div class="treatment-meta">
+                        <span class="badge bg-light text-dark border">Gut Microbiome</span>
+                        <span class="badge bg-light text-dark border">Metabolic</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Treatment 6: Rasayana & Rejuvenation -->
+            <div class="col-md-6 col-lg-4">
+                <div class="treatment-card h-100 shadow-sm rounded-4 p-4">
+                    <div class="treatment-icon-circle bg-terra-subtle">
+                        <i class="bi bi-brightness-high text-terra"></i>
+                    </div>
+                    <h4 class="treatment-name">Rasayana & Longevity Therapy</h4>
+                    <p class="treatment-desc">Cellular rejuvenation protocols that replenish Ojas (vital vigor), reinforce autoimmune defense, and enhance physical vitality and mental clarity.</p>
+                    <div class="treatment-meta">
+                        <span class="badge bg-light text-dark border">Longevity</span>
+                        <span class="badge bg-light text-dark border">Ojas Vitality</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= MEET THE CHIEF PHYSICIAN (anchored as #about) ================= -->
+<section id="about" class="py-5 bg-canvas" data-aos="fade-up">
+    <div class="container py-4">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5 text-center">
+                <div class="doctor-portrait-frame position-relative mx-auto">
+                    <img src="{{ url_for('static', filename='images/about-pic.png') }}" class="img-fluid rounded-4 shadow-lg doctor-main-img" alt="Dr. Shanmuga Loga, Chief Ayurvedic Vaidya">
+                    <div class="doctor-seal-chip shadow">
+                        <i class="bi bi-patch-check-fill text-success fs-5"></i>
+                        <div class="text-start">
+                            <strong>Certified Vaidya</strong>
+                            <small class="d-block text-muted">Reg #AYU-TN-48291</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <span class="sub-title">Clinical Leadership</span>
+                <h2 class="section-title mb-3">Meet Dr. Shanmuga Loga</h2>
+                <h5 class="text-emerald fw-semibold mb-3">B.A.M.S, M.D. (Ayurveda) • Senior Panchakarma Physician</h5>
+
+                <p class="text-muted mb-4" style="line-height: 1.75;">
+                    With over 12 years of devoted clinical experience, Dr. Shanmuga Loga has guided thousands of patients from chronic illness toward vibrant health. Trained in the venerable tradition of Kerala Panchakarma and classical Kayachikitsa, he bridges classical texts with comprehensive diagnostic clarity.
+                </p>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-sm-6">
+                        <div class="spec-bullet p-3 rounded-3 shadow-sm">
+                            <i class="bi bi-mortarboard-fill text-emerald me-2"></i>
+                            <strong>Qualifications:</strong>
+                            <div class="text-muted small mt-1">BAMS, MD (Ayurvedic Medicine)</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="spec-bullet p-3 rounded-3 shadow-sm">
+                            <i class="bi bi-clock-history text-emerald me-2"></i>
+                            <strong>Clinical Lineage:</strong>
+                            <div class="text-muted small mt-1">12+ Years Dedicated Practice</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="spec-bullet p-3 rounded-3 shadow-sm">
+                            <i class="bi bi-camera-video-fill text-emerald me-2"></i>
+                            <strong>Consultation Formats:</strong>
+                            <div class="text-muted small mt-1">In-Sanctuary & Encrypted Tele-Ayurveda</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="spec-bullet p-3 rounded-3 shadow-sm">
+                            <i class="bi bi-translate text-emerald me-2"></i>
+                            <strong>Languages Spoken:</strong>
+                            <div class="text-muted small mt-1">Tamil • English • Malayalam • Hindi</div>
+                        </div>
+                    </div>
+                </div>
+
+                <blockquote class="vaidya-quote p-3 rounded-3 bg-emerald-subtle border-start border-4 border-success mb-4">
+                    <em>"Ayurveda does not merely mask the symptom; it re-establishes the profound conversation between your inner bio-rhythms and nature's wisdom."</em>
+                </blockquote>
+
+                <div class="d-flex gap-3">
+                    {% if session and session.get('user') %}
+                        <a href="/dashboard" class="btn btn-primary-custom px-4 shadow">
+                            <i class="bi bi-calendar2-check me-2"></i> Book Consultation Slot
+                        </a>
+                    {% else %}
+                        <a href="/login" class="btn btn-primary-custom px-4 shadow">
+                            <i class="bi bi-calendar2-check me-2"></i> Schedule Consultation with Dr. Loga
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= PATIENT JOURNEY ================= -->
+<section id="journey" class="py-5 bg-white" data-aos="fade-up">
+    <div class="container py-4">
+        <div class="section-header text-center mx-auto mb-5">
+            <span class="sub-title">Methodology</span>
+            <h2 class="section-title">Your Path to Holistic Healing</h2>
+            <p class="text-muted">A structured, four-step therapeutic journey from clinical evaluation to long-term vitality.</p>
+        </div>
+
+        <div class="row g-4 position-relative">
+            <div class="col-md-3">
+                <div class="step-card text-center p-4 rounded-4 shadow-sm h-100">
+                    <div class="step-badge">01</div>
+                    <div class="step-icon my-3"><i class="bi bi-journal-check"></i></div>
+                    <h5 class="fw-bold">Intake & Profiling</h5>
+                    <p class="text-muted small">Register and document your chief health complaints, lifestyle, digestion, and medical history.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="step-card text-center p-4 rounded-4 shadow-sm h-100">
+                    <div class="step-badge">02</div>
+                    <div class="step-icon my-3"><i class="bi bi-heart-pulse"></i></div>
+                    <h5 class="fw-bold">Nadi & Rogi Pariksha</h5>
+                    <p class="text-muted small">In-depth consultation analyzing pulse, tongue (Jihwa), eyes (Netra), and your innate Prakriti.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="step-card text-center p-4 rounded-4 shadow-sm h-100">
+                    <div class="step-badge">03</div>
+                    <div class="step-icon my-3"><i class="bi bi-prescription2"></i></div>
+                    <h5 class="fw-bold">Custom Treatment</h5>
+                    <p class="text-muted small">Personalized Aushadha (medicines), Pathya Ahara (nutritional diet plan), and Dinacharya routines.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="step-card text-center p-4 rounded-4 shadow-sm h-100">
+                    <div class="step-badge">04</div>
+                    <div class="step-icon my-3"><i class="bi bi-arrow-repeat"></i></div>
+                    <h5 class="fw-bold">Digital Report & Follow-up</h5>
+                    <p class="text-muted small">Instant printable report with your prescription, lifestyle chart, and monitored review appointments.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= PATIENT TESTIMONIALS ================= -->
+<section class="py-5 bg-canvas" data-aos="fade-up">
+    <div class="container py-4">
+        <div class="section-header text-center mx-auto mb-5">
+            <span class="sub-title">Authentic Outcomes</span>
+            <h2 class="section-title">Words from Our Patients</h2>
+            <p class="text-muted">Real stories of sustained relief from chronic lifestyle and autoimmune challenges.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="testimonial-card p-4 rounded-4 shadow-sm bg-white h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="stars mb-2">★★★★★</div>
+                        <p class="testimonial-text text-muted" style="line-height: 1.7;">
+                            "I suffered from chronic acid reflux and digestive sluggishness for 4 years. Dr. Loga’s Kashayams and dietary shift to Pathya foods reversed my symptoms in just six weeks. Truly grateful."
+                        </p>
+                    </div>
+                    <div class="testimonial-author d-flex align-items-center gap-3 pt-3 border-top">
+                        <div class="author-avatar bg-emerald-subtle text-emerald rounded-circle d-flex align-items-center justify-content-center fw-bold">RK</div>
+                        <div>
+                            <div class="fw-bold text-dark">Ramesh Kumar</div>
+                            <small class="text-muted">Treated for: GERD & Digestive Agni</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="testimonial-card p-4 rounded-4 shadow-sm bg-white h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="stars mb-2">★★★★★</div>
+                        <p class="testimonial-text text-muted" style="line-height: 1.7;">
+                            "The Shirodhara and herbal nervine tonics brought deep calm to my severe work-induced insomnia and anxiety. The patient portal makes checking prescriptions and booking follow-ups seamless."
+                        </p>
+                    </div>
+                    <div class="testimonial-author d-flex align-items-center gap-3 pt-3 border-top">
+                        <div class="author-avatar bg-gold-subtle text-gold rounded-circle d-flex align-items-center justify-content-center fw-bold">PS</div>
+                        <div>
+                            <div class="fw-bold text-dark">Priya Sundaram</div>
+                            <small class="text-muted">Treated for: Insomnia & Anxiety</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="testimonial-card p-4 rounded-4 shadow-sm bg-white h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="stars mb-2">★★★★★</div>
+                        <p class="testimonial-text text-muted" style="line-height: 1.7;">
+                            "Severe cervical stiffness and lower back pain had limited my daily mobility. The Kati Basti protocol and customized Tailams gave me relief that painkillers never could achieve."
+                        </p>
+                    </div>
+                    <div class="testimonial-author d-flex align-items-center gap-3 pt-3 border-top">
+                        <div class="author-avatar bg-terra-subtle text-terra rounded-circle d-flex align-items-center justify-content-center fw-bold">AV</div>
+                        <div>
+                            <div class="fw-bold text-dark">Arun Varma</div>
+                            <small class="text-muted">Treated for: Cervical Spondylosis</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= FREQUENTLY ASKED QUESTIONS ================= -->
+<section id="faq" class="py-5 bg-white" data-aos="fade-up">
+    <div class="container py-4">
+        <div class="section-header text-center mx-auto mb-5">
+            <span class="sub-title">Clarifications</span>
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="text-muted">Clear answers about our Ayurvedic consultation and treatment procedures.</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="accordion custom-accordion" id="ayurvedaFaq">
+                    <!-- Item 1 -->
+                    <div class="accordion-item mb-3 rounded-3 overflow-hidden shadow-sm">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <i class="bi bi-question-circle-fill text-success me-2"></i> How does an online Ayurvedic consultation work?
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#ayurvedaFaq">
+                            <div class="accordion-body text-muted">
+                                Once you sign up and select an appointment slot, your doctor reviews your chief complaints, symptoms, and medical history. During the consultation, our Vaidya conducts a detailed Ashtavidha Pariksha assessment and prescribes a tailored herbal formulation and dietary regimen, delivered directly to your portal.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="accordion-item mb-3 rounded-3 overflow-hidden shadow-sm">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <i class="bi bi-question-circle-fill text-success me-2"></i> Are Shayure Ayurvedic medicines safe and tested?
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#ayurvedaFaq">
+                            <div class="accordion-body text-muted">
+                                Yes. All formulations adhere to the Ayurvedic Pharmacopoeia of India (API) and Good Manufacturing Practice (GMP) standards. They are free from synthetic adulterants, heavy-metal excesses, and harmful preservatives.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="accordion-item mb-3 rounded-3 overflow-hidden shadow-sm">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                <i class="bi bi-question-circle-fill text-success me-2"></i> Can I take Ayurvedic treatments alongside Allopathic medicines?
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#ayurvedaFaq">
+                            <div class="accordion-body text-muted">
+                                In most circumstances, yes. Our physicians review your existing allopathic medications to ensure there are no herb-drug interactions, usually recommending an interval of 60 to 90 minutes between intakes.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="accordion-item mb-3 rounded-3 overflow-hidden shadow-sm">
+                        <h2 class="accordion-header" id="headingFour">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                <i class="bi bi-question-circle-fill text-success me-2"></i> How do I download my official consultation report and prescription?
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#ayurvedaFaq">
+                            <div class="accordion-body text-muted">
+                                You can immediately log into your Patient Dashboard, view your appointment records, and click "View Report". You can view the full clinical breakdown and download a printable official PDF prescription with a single click.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= CLINICAL SANCTUARY & CONTACT (anchored as #contact) ================= -->
+<section id="contact" class="py-5 bg-canvas" data-aos="fade-up">
+    <div class="container py-4">
+        <div class="section-header text-center mx-auto mb-5">
+            <span class="sub-title">Sanctuary & Reach</span>
+            <h2 class="section-title">Visit Our Wellness Sanctuary</h2>
+            <p class="text-muted">We welcome you to consult our doctors in person or reach out for inquiries.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-5">
+                <div class="clinic-info-card p-4 rounded-4 shadow-sm bg-white h-100">
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="brand-icon-lg">🌿</div>
+                        <div>
+                            <h4 class="fw-bold mb-0">Shayure Ayurveda</h4>
+                            <small class="text-emerald fw-semibold">Center for Classical Panchakarma</small>
+                        </div>
+                    </div>
+
+                    <div class="contact-info-list d-flex flex-column gap-3">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="contact-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                            <div>
+                                <strong>Sanctuary Address</strong>
+                                <p class="text-muted small mb-0">142/B Herbal Garden Avenue, Tuticorin, Tamil Nadu 628002, India</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="contact-icon"><i class="bi bi-telephone-fill"></i></div>
+                            <div>
+                                <strong>Direct Helpline & Appointments</strong>
+                                <p class="text-muted small mb-0">+91 94421 88302 / +91 461 234 5678</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="contact-icon"><i class="bi bi-envelope-fill"></i></div>
+                            <div>
+                                <strong>Electronic Inquiries</strong>
+                                <p class="text-muted small mb-0">consultations@shayureayurveda.com</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="contact-icon"><i class="bi bi-clock-fill"></i></div>
+                            <div>
+                                <strong>Sanctuary Timings</strong>
+                                <p class="text-muted small mb-0">Monday – Saturday: 8:30 AM – 7:30 PM<br>Sunday: By Prior Appointment</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="contact-form-card p-4 rounded-4 shadow-sm bg-white h-100">
+                    <h4 class="fw-bold mb-2">Send an Inquiry to Our Care Team</h4>
+                    <p class="text-muted small mb-4">Have questions about specific Panchakarma packages or medicine dispatches? Leave us a message.</p>
+
+                    <form onsubmit="event.preventDefault(); window.showAyurToast ? window.showAyurToast('Thank you for reaching out! A care coordinator will contact you shortly.', 'success') : alert('Thank you for reaching out! A care coordinator will contact you shortly.'); this.reset();">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold">Your Full Name</label>
+                                <input type="text" class="form-control" placeholder="e.g. Ananya Raman" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold">Phone / WhatsApp Number</label>
+                                <input type="tel" class="form-control" placeholder="+91 98765 43210" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-semibold">Email Address</label>
+                                <input type="email" class="form-control" placeholder="you@domain.com" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-semibold">Health Concern or Inquiry</label>
+                                <textarea class="form-control" rows="4" placeholder="Briefly describe what you would like to consult about..." required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary-custom w-100 py-2 shadow-sm">
+                                    <i class="bi bi-send-fill me-2"></i> Submit Inquiry
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= CALL TO ACTION BANNER ================= -->
+<section class="py-5 cta-banner position-relative overflow-hidden text-center text-white">
+    <div class="container position-relative z-1 py-3">
+        <h2 class="display-6 fw-bold mb-3 text-white" style="color: #ffffff !important;">Begin Your Healing Journey Today</h2>
+        <p class="lead max-w-700 mx-auto opacity-90 mb-4" style="color: rgba(255, 255, 255, 0.95) !important;">
+            Embrace ancient wisdom customized for your modern life. Book your consultation with our experienced Ayurvedic physicians now.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            {% if session and session.get('user') %}
+                {% if session.get('role') == 'doctor' %}
+                    <a href="/doctor" class="btn btn-light text-success fw-bold btn-lg px-5 shadow">
+                        <i class="bi bi-speedometer2 me-2"></i> Doctor Dashboard
+                    </a>
+                {% else %}
+                    <a href="/dashboard" class="btn btn-light text-success fw-bold btn-lg px-5 shadow">
+                        <i class="bi bi-calendar2-check me-2"></i> Go to Dashboard
+                    </a>
+                {% endif %}
+            {% else %}
+                <a href="/login" class="btn btn-light text-success fw-bold btn-lg px-5 shadow">
+                    <i class="bi bi-calendar2-check me-2"></i> Book Consultation
+                </a>
+                <a href="/signup" class="btn btn-outline-light btn-lg px-4">
+                    Create Account
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,471 @@
+{% extends "base.html" %}
+
+{% block title %}
+Patient Dashboard — Shayure Ayurveda
+{% endblock %}
+
+{% block css %}
+<style>
+.dashboard-hero {
+    background: radial-gradient(120% 80% at 50% 0%, #edf6f0 0%, #fbf9f5 70%);
+    padding: 2.5rem 0 2rem;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.portal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--primary-subtle);
+    color: var(--primary);
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border: 1px solid var(--primary-subtle-border);
+}
+
+.patient-welcome-title {
+    font-family: var(--font-editorial);
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.35rem;
+}
+
+.patient-stat-card {
+    background: #ffffff;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform var(--transition-fast);
+}
+
+.patient-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.patient-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.patient-stat-val {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
+}
+
+.patient-stat-lbl {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: 0;
+}
+
+/* Quick Tag Pill */
+.quick-tag-chip {
+    cursor: pointer;
+    background: var(--surface-cream);
+    border: 1px solid var(--border-subtle);
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
+}
+
+.quick-tag-chip:hover {
+    background: var(--primary-subtle);
+    color: var(--primary);
+    border-color: var(--primary-accent);
+}
+
+/* Time slot chips */
+.time-slot-chip {
+    cursor: pointer;
+    border: 1.5px solid var(--border-subtle);
+    background: #ffffff;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
+}
+
+.time-slot-chip:hover {
+    border-color: var(--primary-accent);
+    color: var(--primary);
+}
+
+.time-slot-chip.selected {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+    box-shadow: var(--shadow-xs);
+}
+
+/* Appointment Card in List */
+.appointment-card {
+    background: #ffffff;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+    position: relative;
+}
+
+.appointment-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(64, 145, 108, 0.25);
+}
+
+.appointment-avatar {
+    width: 44px;
+    height: 44px;
+    background: var(--primary-subtle);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.appointment-symptoms-quote {
+    background: var(--surface-cream);
+    border-left: 3px solid var(--primary-accent);
+    padding: 8px 12px;
+    border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    margin: 0.75rem 0;
+}
+
+/* Status Filter Pill */
+.filter-chip {
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 0.82rem;
+    font-weight: 600;
+    border: 1px solid var(--border-subtle);
+    background: #ffffff;
+    color: var(--text-muted);
+    transition: all var(--transition-fast);
+}
+
+.filter-chip.active, .filter-chip:hover {
+    background: var(--primary-subtle);
+    color: var(--primary);
+    border-color: var(--primary-accent);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Dashboard Hero Header -->
+<section class="dashboard-hero">
+    <div class="container">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <div class="portal-badge mb-2">
+                    <i class="bi bi-person-heart"></i> Patient Care Sanctuary
+                </div>
+                <h1 class="patient-welcome-title">
+                    Namaste, {{ session['user'] }} 🌿
+                </h1>
+                <p class="text-muted mb-0">
+                    Welcome to your personalized Ayurvedic portal. Schedule appointments, consult our Vaidyas, and review your diagnostic reports.
+                </p>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="row g-2">
+                    <div class="col-6">
+                        <div class="patient-stat-card">
+                            <div class="patient-stat-icon bg-emerald-subtle text-emerald">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                            <div>
+                                <div class="patient-stat-val" id="statTotalCount">0</div>
+                                <div class="patient-stat-lbl">Consultations</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="patient-stat-card">
+                            <div class="patient-stat-icon bg-gold-subtle text-gold">
+                                <i class="bi bi-file-earmark-medical"></i>
+                            </div>
+                            <div>
+                                <div class="patient-stat-val" id="statConfirmedCount">0</div>
+                                <div class="patient-stat-lbl">Confirmed</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Portal Content -->
+<div class="container py-4">
+    <div class="row g-4">
+        <!-- Left Column: Book New Appointment -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white border-bottom border-light py-3 px-4">
+                    <h5 class="fw-bold mb-1 text-primary d-flex align-items-center gap-2">
+                        <i class="bi bi-calendar2-plus text-success"></i> Book New Consultation
+                    </h5>
+                    <small class="text-muted">Select doctor, timing, and describe your symptoms</small>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Status message container -->
+                    <div id="status"></div>
+
+                    <form id="bookForm" onsubmit="event.preventDefault(); book();">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Patient Name</label>
+                            <input type="text" id="name" class="form-control" placeholder="Your Full Name" value="{{ session['user'] }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="doctor" class="form-label">Consulting Vaidya (Doctor)</label>
+                            <select id="doctor" class="form-select" required>
+                                <option value="" disabled>Choose an Ayurvedic Physician</option>
+                                <option value="Dr. Shanmuga Loga" selected>Dr. Shanmuga Loga (Panchakarma & Kayachikitsa)</option>
+                                <option value="Dr. Ananya Iyer">Dr. Ananya Iyer (Dravyaguna & Women's Health)</option>
+                                <option value="Dr. K. Vignesh">Dr. K. Vignesh (Nadi Pariksha & Spine Specialist)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label for="symptoms" class="form-label mb-0">Symptoms & Chief Complaints</label>
+                            </div>
+                            <!-- Quick complaint chips -->
+                            <div class="d-flex flex-wrap gap-1 mb-2">
+                                <span class="quick-tag-chip" onclick="addSymptomTag('Indigestion & Acidity')">+ Acidity</span>
+                                <span class="quick-tag-chip" onclick="addSymptomTag('Chronic Joint Pain')">+ Joint Pain</span>
+                                <span class="quick-tag-chip" onclick="addSymptomTag('Insomnia & Stress')">+ Insomnia</span>
+                                <span class="quick-tag-chip" onclick="addSymptomTag('PCOS & Hormone Imbalance')">+ PCOS</span>
+                                <span class="quick-tag-chip" onclick="addSymptomTag('Skin Rash / Allergy')">+ Skin</span>
+                            </div>
+                            <textarea id="symptoms" class="form-control" rows="3" placeholder="Describe symptoms, duration, and any current medications..." required></textarea>
+                        </div>
+
+                        <!-- Interactive Date & Slot Selector -->
+                        <div class="mb-3">
+                            <label class="form-label">Preferred Date & Time Slot</label>
+                            <div class="row g-2 mb-2">
+                                <div class="col-7">
+                                    <input type="date" id="appointment_date" class="form-control" required onchange="updateDateTimeInput()">
+                                </div>
+                                <div class="col-5">
+                                    <input type="time" id="appointment_time_slot" class="form-control" required value="10:00" onchange="updateDateTimeInput()">
+                                </div>
+                            </div>
+
+                            <!-- Quick Time Slot Chips -->
+                            <div class="d-flex flex-wrap gap-2 pt-1">
+                                <span class="time-slot-chip" onclick="pickSlot('09:30')">09:30 AM</span>
+                                <span class="time-slot-chip selected" onclick="pickSlot('10:00')">10:00 AM</span>
+                                <span class="time-slot-chip" onclick="pickSlot('11:30')">11:30 AM</span>
+                                <span class="time-slot-chip" onclick="pickSlot('14:30')">02:30 PM</span>
+                                <span class="time-slot-chip" onclick="pickSlot('16:00')">04:00 PM</span>
+                                <span class="time-slot-chip" onclick="pickSlot('17:30')">05:30 PM</span>
+                            </div>
+
+                            <!-- Hidden ISO datetime-local field for backend compatibility -->
+                            <input type="hidden" id="appointment_time">
+                        </div>
+
+                        <button type="submit" class="btn btn-ayur-primary w-100 py-2 shadow-sm" id="bookBtn">
+                            <i class="bi bi-calendar2-check me-2"></i> Confirm & Book Appointment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: My Consultations & Prescriptions -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white border-bottom border-light py-3 px-4">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">
+                        <div>
+                            <h5 class="fw-bold mb-1 text-primary d-flex align-items-center gap-2">
+                                <i class="bi bi-journal-medical text-success"></i> My Consultations
+                            </h5>
+                            <small class="text-muted">Track upcoming checkups and access medical reports</small>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-light" onclick="load()" title="Refresh records">
+                                <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Search & Filter Bar -->
+                    <div class="mt-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                            <input type="text" id="search" class="form-control border-start-0" placeholder="Search by doctor or symptoms..." onkeyup="filterPatientAppointments()">
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 mt-2">
+                            <span class="filter-chip active" onclick="setFilterStatus('all', this)">All</span>
+                            <span class="filter-chip" onclick="setFilterStatus('Confirmed', this)">Confirmed</span>
+                            <span class="filter-chip" onclick="setFilterStatus('Pending', this)">Pending</span>
+                            <span class="filter-chip" onclick="setFilterStatus('Completed', this)">Completed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Dynamic Appointments Container -->
+                    <ul id="list" class="list-unstyled mb-0">
+                        <li class="p-4 text-center text-muted">
+                            <div class="spinner-border spinner-border-sm text-success me-2" role="status"></div>
+                            Loading your consultations...
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Appointment Modal -->
+<div class="modal fade" id="editAppointmentModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">
+                    <i class="bi bi-pencil-square text-success"></i> Reschedule Consultation
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editApptId">
+                <div class="mb-3">
+                    <label class="form-label">Patient Name</label>
+                    <input type="text" id="editName" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Consulting Doctor</label>
+                    <select id="editDoctor" class="form-select" required>
+                        <option value="Dr. Shanmuga Loga">Dr. Shanmuga Loga (Panchakarma & Kayachikitsa)</option>
+                        <option value="Dr. Ananya Iyer">Dr. Ananya Iyer (Dravyaguna & Women's Health)</option>
+                        <option value="Dr. K. Vignesh">Dr. K. Vignesh (Nadi Pariksha & Spine Specialist)</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Appointment Date & Time</label>
+                    <input type="datetime-local" id="editTime" class="form-control" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-ayur-primary" onclick="submitEditAppointment()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Initialize date picker to today or tomorrow
+document.addEventListener('DOMContentLoaded', () => {
+    const today = new Date();
+    // Default to tomorrow if late, or today
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const dateInput = document.getElementById('appointment_date');
+    if (dateInput) {
+        dateInput.value = `${yyyy}-${mm}-${dd}`;
+        dateInput.min = `${yyyy}-${mm}-${dd}`;
+        updateDateTimeInput();
+    }
+});
+
+function pickSlot(timeStr) {
+    document.querySelectorAll('.time-slot-chip').forEach(c => c.classList.remove('selected'));
+    event.target.classList.add('selected');
+    document.getElementById('appointment_time_slot').value = timeStr;
+    updateDateTimeInput();
+}
+
+function updateDateTimeInput() {
+    const dateVal = document.getElementById('appointment_date').value;
+    const timeVal = document.getElementById('appointment_time_slot').value;
+    if (dateVal && timeVal) {
+        document.getElementById('appointment_time').value = `${dateVal}T${timeVal}`;
+    }
+}
+
+function addSymptomTag(tag) {
+    const textarea = document.getElementById('symptoms');
+    if (textarea.value) {
+        textarea.value += ', ' + tag;
+    } else {
+        textarea.value = tag;
+    }
+    textarea.focus();
+}
+
+let currentFilterStatus = 'all';
+
+function setFilterStatus(status, chip) {
+    currentFilterStatus = status;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    filterPatientAppointments();
+}
+
+function filterPatientAppointments() {
+    const search = (document.getElementById('search').value || '').toLowerCase();
+    const cards = document.querySelectorAll('.appointment-card');
+    cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        const cardStatus = card.getAttribute('data-status') || '';
+        const matchesSearch = text.includes(search);
+        const matchesStatus = currentFilterStatus === 'all' || cardStatus.toLowerCase() === currentFilterStatus.toLowerCase();
+
+        if (matchesSearch && matchesStatus) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %}

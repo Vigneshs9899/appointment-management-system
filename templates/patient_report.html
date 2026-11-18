@@ -1,0 +1,489 @@
+{% extends "base.html" %}
+
+{% block title %}
+Ayurvedic Medical Report #{{ appointment[0] }} — Shayure Ayurveda
+{% endblock %}
+
+{% block css %}
+<style>
+/* Medical Report Document Styling */
+.report-page-container {
+    padding: 2.5rem 1rem 4rem;
+    background: radial-gradient(circle at 50% 10%, #f4fbf6 0%, #fbf9f5 80%);
+}
+
+.report-action-bar {
+    max-width: 860px;
+    margin: 0 auto 1.5rem auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.prescription-sheet {
+    background: #ffffff;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3.5rem 4rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-subtle);
+    position: relative;
+}
+
+/* Watermark */
+.prescription-sheet::before {
+    content: "🌿";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 260px;
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.letterhead-header {
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
+}
+
+.clinic-logo-emblem {
+    width: 60px;
+    height: 60px;
+    background: var(--primary-subtle);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    border: 1px solid var(--primary-subtle-border);
+}
+
+.clinic-name {
+    font-family: var(--font-editorial);
+    font-size: 1.95rem;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin-bottom: 4px;
+}
+
+.clinic-sub {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.clinic-meta {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+}
+
+.report-title-banner {
+    background: var(--surface-cream);
+    border: 1px solid var(--border-subtle);
+    border-left: 4px solid var(--primary-accent);
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.report-title-text {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0;
+}
+
+/* Metadata Grid */
+.meta-grid-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+}
+
+.meta-grid-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 0.9rem;
+}
+
+.meta-grid-table tr:last-child td {
+    border-bottom: none;
+}
+
+.meta-label {
+    width: 25%;
+    font-weight: 700;
+    color: var(--text-muted);
+    background-color: var(--surface-cream);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-right: 1px solid var(--border-subtle);
+}
+
+.meta-value {
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+/* Section Clinical Card */
+.clinical-block {
+    margin-bottom: 1.75rem;
+}
+
+.clinical-block-title {
+    font-family: var(--font-heading);
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--primary);
+    border-bottom: 1.5px solid var(--primary-subtle-border);
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.clinical-content-box {
+    background: #ffffff;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+    font-size: 0.94rem;
+    line-height: 1.65;
+    color: var(--text-main);
+}
+
+.prescription-content-box {
+    background: #fdfcf9;
+    border: 1px solid var(--border-subtle);
+    border-left: 4px solid var(--accent-gold);
+    border-radius: var(--radius-md);
+    padding: 18px 22px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
+/* Dietary & Lifestyle Dos / Don'ts */
+.lifestyle-advice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 1.75rem;
+}
+
+.pathya-box {
+    background: var(--status-confirmed-bg);
+    border: 1px solid var(--status-confirmed-border);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    font-size: 0.88rem;
+}
+
+.apathya-box {
+    background: var(--status-cancelled-bg);
+    border: 1px solid var(--status-cancelled-border);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    font-size: 0.88rem;
+}
+
+.box-heading {
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Signature & Seal Footer */
+.prescription-footer-sign {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.clinical-seal-badge {
+    border: 1.5px dashed #b7e4c7;
+    border-radius: var(--radius-md);
+    padding: 12px 18px;
+    font-size: 0.78rem;
+    color: var(--primary);
+    background: var(--primary-subtle);
+    display: inline-block;
+    max-width: 280px;
+}
+
+.signature-block {
+    text-align: right;
+}
+
+.sign-line {
+    width: 220px;
+    border-bottom: 1.5px solid var(--primary);
+    margin-bottom: 6px;
+    margin-left: auto;
+}
+
+.doctor-sign-title {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+}
+
+.doctor-sign-cred {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   PRINT MEDIA STYLES (A4 Perfect Sheet)
+   ========================================================================== */
+@media print {
+    body {
+        background: #ffffff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .ayur-navbar,
+    .ayur-footer,
+    .report-action-bar,
+    .whatsapp-btn,
+    .ayur-toast-container {
+        display: none !important;
+    }
+
+    .report-page-container {
+        padding: 0 !important;
+        background: none !important;
+    }
+
+    .prescription-sheet {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 15mm 20mm !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .prescription-sheet::before {
+        opacity: 0.03 !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="report-page-container">
+    <!-- Top Action Bar (hidden on print) -->
+    <div class="report-action-bar">
+        <a href="/dashboard" class="btn btn-ayur-outline btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to Consultations
+        </a>
+        <div class="d-flex gap-2">
+            <button onclick="window.print()" class="btn btn-light btn-sm shadow-sm">
+                <i class="bi bi-printer me-1"></i> Print Prescription
+            </button>
+            <a href="/report/{{ appointment[0] }}/pdf" class="btn btn-ayur-primary btn-sm shadow-sm">
+                <i class="bi bi-file-earmark-pdf me-1"></i> Download Official PDF
+            </a>
+        </div>
+    </div>
+
+    <!-- Official Clinical Prescription Document Sheet -->
+    <div class="prescription-sheet">
+        <!-- Letterhead Header -->
+        <div class="letterhead-header d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3">
+                <div class="clinic-logo-emblem">🌿</div>
+                <div>
+                    <h1 class="clinic-name">SHAYURE AYURVEDA</h1>
+                    <div class="clinic-sub">Sanctuary of Classical Panchakarma & Medicine</div>
+                    <div class="clinic-meta mt-1">
+                        NABH Accredited Ayurvedic Health Center • Reg. No: AYU-TN-48291
+                    </div>
+                </div>
+            </div>
+            <div class="text-end d-none d-sm-block clinic-meta">
+                <div><strong>Campus:</strong> 142/B Herbal Garden Avenue</div>
+                <div>Tuticorin, Tamil Nadu 628002</div>
+                <div><strong>Helpline:</strong> +91 94421 88302</div>
+                <div><strong>Portal:</strong> care@shayureayurveda.com</div>
+            </div>
+        </div>
+
+        <!-- Document Reference Strip -->
+        <div class="report-title-banner">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-prescription2 text-success fs-5"></i>
+                <span class="report-title-text">Medical Consultation & Health Report</span>
+            </div>
+            <div class="d-flex align-items-center gap-3 small">
+                <span><strong>Report Ref:</strong> #SAY-{{ appointment[0] }}</span>
+                <span><strong>Status:</strong> 
+                    {% if appointment[5] == 'Confirmed' or appointment[5] == 'Completed' %}
+                        <span class="badge bg-success">{{ appointment[5] }}</span>
+                    {% elif appointment[5] == 'Pending' %}
+                        <span class="badge bg-warning">{{ appointment[5] }}</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ appointment[5] or 'Confirmed' }}</span>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <!-- Patient & Consultation Metadata Grid -->
+        <table class="meta-grid-table">
+            <tr>
+                <td class="meta-label">Patient Name</td>
+                <td class="meta-value"><strong>{{ appointment[1] }}</strong></td>
+                <td class="meta-label">Patient ID</td>
+                <td class="meta-value">#PAT-{{ appointment[4] or appointment[0] }}</td>
+            </tr>
+            <tr>
+                <td class="meta-label">Consulting Vaidya</td>
+                <td class="meta-value">{{ appointment[2] }}</td>
+                <td class="meta-label">Consultation Date</td>
+                <td class="meta-value">{{ appointment[3] }}</td>
+            </tr>
+            <tr>
+                <td class="meta-label">Prakriti / Constitution</td>
+                <td class="meta-value"><span class="badge badge-dosha-tridosha">Tridosha Balance Assessment</span></td>
+                <td class="meta-label">Follow-up Date</td>
+                <td class="meta-value">
+                    {% if appointment[6] %}
+                        <strong class="text-success">{{ appointment[6] }}</strong>
+                    {% else %}
+                        <span class="text-muted">As advised by Vaidya (14 Days)</span>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+
+        <!-- Chief Complaints / Symptoms -->
+        <div class="clinical-block">
+            <div class="clinical-block-title">
+                <i class="bi bi-clipboard2-pulse text-success"></i> 1. Chief Complaints & Symptoms (Lakshana)
+            </div>
+            <div class="clinical-content-box">
+                {{ appointment[7] or 'General health and preventive immunity consultation.' }}
+            </div>
+        </div>
+
+        <!-- Ayurvedic Diagnosis (Roga Nidana) -->
+        <div class="clinical-block">
+            <div class="clinical-block-title">
+                <i class="bi bi-search-heart text-success"></i> 2. Clinical Evaluation & Diagnosis (Roga Nidana)
+            </div>
+            <div class="clinical-content-box">
+                {% if appointment|length > 10 and appointment[10] %}
+                    {{ appointment[10] }}
+                {% else %}
+                    Tridosha functional evaluation; Agni Deepana and Ama Pachana therapeutic focus advised.
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Ayurvedic Prescription (Aushadha Sevana) -->
+        <div class="clinical-block">
+            <div class="clinical-block-title">
+                <i class="bi bi-capsule-pill text-success"></i> 3. Ayurvedic Formulations & Prescription (Aushadha)
+            </div>
+            <div class="prescription-content-box">
+                {% if appointment[8] %}
+{{ appointment[8] }}
+                {% else %}
+1. Amrithotharam Kashayam — 15ml with 45ml boiled lukewarm water, twice daily before meals (6:30 AM / 6:30 PM).
+2. Triphala Churna — 1 tsp with warm water at bedtime.
+3. Ksheerabala Tailam 101 — 5 drops in warm milk in the morning.
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Pathya & Apathya (Dietary & Lifestyle Guidelines) -->
+        <div class="lifestyle-advice-grid">
+            <div class="pathya-box">
+                <div class="box-heading text-success">
+                    <i class="bi bi-check-circle-fill"></i> Pathya (Favorable Habits & Foods)
+                </div>
+                <ul class="mb-0 ps-3 small text-muted">
+                    <li>Freshly prepared warm, easily digestible meals (Laghu Ahara).</li>
+                    <li>Sip warm cumin-ginger boiled water throughout the day.</li>
+                    <li>Regular sleep routine (Dinacharya); sleep before 10:30 PM.</li>
+                    <li>Gentle Pranayama (Anulom Vilom) for 15 minutes morning and evening.</li>
+                </ul>
+            </div>
+
+            <div class="apathya-box">
+                <div class="box-heading text-danger">
+                    <i class="bi bi-x-circle-fill"></i> Apathya (Strictly Avoided Habits & Foods)
+                </div>
+                <ul class="mb-0 ps-3 small text-muted">
+                    <li>Ice-cold beverages, refrigerated leftovers, and deep-fried foods.</li>
+                    <li>Daytime sleeping (Divaswapna) and late-night awakening (Ratri Jagarana).</li>
+                    <li>Skipping regular meals or erratic fasting.</li>
+                    <li>Excessive sour, pungent, and salty snacks.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Doctor's Clinical Notes -->
+        <div class="clinical-block">
+            <div class="clinical-block-title">
+                <i class="bi bi-chat-left-text text-success"></i> 4. Vaidya Clinical Notes & Instructions
+            </div>
+            <div class="clinical-content-box">
+                {{ appointment[9] or 'Adhere strictly to prescribed medicine timing. In case of acute discomfort or fever, contact the clinic care team immediately for adjustment.' }}
+            </div>
+        </div>
+
+        <!-- Signature & Seal -->
+        <div class="prescription-footer-sign">
+            <div class="clinical-seal-badge">
+                <i class="bi bi-patch-check-fill text-success me-1"></i>
+                <strong>Digitally Validated Medical Document</strong>
+                <div class="small mt-1 text-muted">Issued under Section 33 of Indian Medicine Central Council Act, 1970.</div>
+            </div>
+
+            <div class="signature-block">
+                <div class="sign-line"></div>
+                <div class="doctor-sign-title">{{ appointment[2] }}</div>
+                <div class="doctor-sign-cred">B.A.M.S, M.D. (Ayurveda) • Senior Vaidya</div>
+                <div class="doctor-sign-cred">Reg #AYU-TN-48291</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

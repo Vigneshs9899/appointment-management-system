@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+
+{% block title %}
+Sign In — Shayure Ayurveda Healthcare Portal
+{% endblock %}
+
+{% block css %}
+<style>
+.auth-page-wrapper {
+    min-height: calc(100vh - 180px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    background: radial-gradient(circle at 50% 20%, #f4fbf6 0%, #fbf9f5 80%);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-card {
+    background: #ffffff;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    width: 100%;
+    max-width: 480px;
+    padding: 2.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-emblem {
+    width: 64px;
+    height: 64px;
+    background: var(--primary-subtle);
+    color: var(--primary);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--primary-subtle-border);
+}
+
+.auth-title {
+    font-family: var(--font-editorial);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.35rem;
+}
+
+.auth-subtitle {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+}
+
+/* Role Selector Tabs */
+.role-nav-tabs {
+    background: var(--surface-cream);
+    padding: 4px;
+    border-radius: var(--radius-pill);
+    display: flex;
+    gap: 4px;
+    margin-bottom: 1.75rem;
+    border: 1px solid var(--border-subtle);
+}
+
+.role-tab-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 8px 16px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    border-radius: var(--radius-pill);
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.role-tab-btn.active {
+    background: #ffffff;
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Input with prepend icon */
+.input-icon-group {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    font-size: 1.1rem;
+    pointer-events: none;
+    z-index: 4;
+}
+
+.input-icon-group .form-control {
+    padding-left: 42px;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 4px;
+    z-index: 4;
+}
+
+.password-toggle-btn:hover {
+    color: var(--primary);
+}
+
+/* Quick Fill Demo Pills */
+.demo-credentials-box {
+    background: var(--surface-cream);
+    border: 1px dashed var(--primary-subtle-border);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    margin-top: 1.5rem;
+    font-size: 0.82rem;
+}
+
+.demo-chip {
+    cursor: pointer;
+    background: #ffffff;
+    border: 1px solid var(--border-subtle);
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--primary);
+    transition: all var(--transition-fast);
+}
+
+.demo-chip:hover {
+    background: var(--primary-subtle);
+    border-color: var(--primary-accent);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-page-wrapper">
+    <!-- Floating leaf motifs -->
+    <img src="{{ url_for('static', filename='images/leaf1.png') }}" class="leaf leaf1" style="top: 10%; left: 8%; width: 60px;" alt="" aria-hidden="true">
+    <img src="{{ url_for('static', filename='images/leaf2.png') }}" class="leaf leaf2" style="bottom: 12%; right: 10%; width: 75px;" alt="" aria-hidden="true">
+
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-emblem">🌿</div>
+            <h1 class="auth-title">Welcome Back</h1>
+            <p class="auth-subtitle">Sign in to access your Ayurvedic health sanctuary</p>
+        </div>
+
+        <!-- Role Toggle Tabs -->
+        <div class="role-nav-tabs" role="tablist">
+            <button type="button" class="role-tab-btn active" id="tabPatient" onclick="selectRole('patient')">
+                <i class="bi bi-person-heart"></i> Patient Portal
+            </button>
+            <button type="button" class="role-tab-btn" id="tabDoctor" onclick="selectRole('doctor')">
+                <i class="bi bi-hospital"></i> Doctor Portal
+            </button>
+        </div>
+
+        <!-- Flashed Alert -->
+        {% if error %}
+            <div class="alert alert-danger d-flex align-items-center gap-2 py-2 px-3 mb-3 rounded-3" role="alert">
+                <i class="bi bi-exclamation-triangle-fill flex-shrink-0"></i>
+                <small>{{ error }}</small>
+            </div>
+        {% endif %}
+
+        <form method="POST" action="/login" id="loginForm">
+            <input type="hidden" name="role_hint" id="roleHint" value="patient">
+
+            <div class="mb-3">
+                <label for="usernameInput" class="form-label" id="usernameLabel">Patient Username</label>
+                <div class="input-icon-group">
+                    <i class="bi bi-person input-icon" id="userIcon"></i>
+                    <input type="text" class="form-control" id="usernameInput" name="username" placeholder="Enter your username" required autofocus autocomplete="username">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label for="passwordInput" class="form-label mb-0">Password</label>
+                    <a href="javascript:void(0)" onclick="alert('Please contact clinic support or your Vaidya to reset your password.')" class="small text-muted text-decoration-none">Forgot password?</a>
+                </div>
+                <div class="input-icon-group">
+                    <i class="bi bi-lock input-icon"></i>
+                    <input type="password" class="form-control" id="passwordInput" name="password" placeholder="Enter your password" required autocomplete="current-password">
+                    <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('passwordInput', this)" title="Show/Hide password">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" id="rememberMe" checked>
+                <label class="form-check-label small text-muted" for="rememberMe">
+                    Keep me signed in on this device
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-ayur-primary w-100 py-2 fs-6 shadow-sm" id="submitBtn">
+                <i class="bi bi-box-arrow-in-right me-2"></i> Sign In to Portal
+            </button>
+        </form>
+
+        <!-- Demo Accounts Quick Fill -->
+        <div class="demo-credentials-box">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="fw-bold text-muted"><i class="bi bi-info-circle me-1"></i> Quick Demo Fill:</span>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mt-2">
+                <span class="demo-chip" onclick="quickFill('doctor', 'doctor123', 'doctor')">
+                    <i class="bi bi-hospital me-1"></i> Doctor Demo
+                </span>
+                <span class="demo-chip" onclick="quickFill('patient', 'patient123', 'patient')">
+                    <i class="bi bi-person me-1"></i> Patient Demo
+                </span>
+            </div>
+        </div>
+
+        <div class="text-center mt-4 pt-3 border-top border-light">
+            <p class="small text-muted mb-0">
+                New to Shayure Ayurveda? 
+                <a href="/signup" class="text-success fw-bold text-decoration-none">Create a Patient Account</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function selectRole(role) {
+    const tabPatient = document.getElementById('tabPatient');
+    const tabDoctor = document.getElementById('tabDoctor');
+    const usernameLabel = document.getElementById('usernameLabel');
+    const usernameInput = document.getElementById('usernameInput');
+    const userIcon = document.getElementById('userIcon');
+    const roleHint = document.getElementById('roleHint');
+
+    if (role === 'doctor') {
+        tabDoctor.classList.add('active');
+        tabPatient.classList.remove('active');
+        usernameLabel.textContent = 'Doctor Username';
+        usernameInput.placeholder = 'e.g. doctor or dr.loga';
+        userIcon.className = 'bi bi-hospital input-icon';
+        roleHint.value = 'doctor';
+    } else {
+        tabPatient.classList.add('active');
+        tabDoctor.classList.remove('active');
+        usernameLabel.textContent = 'Patient Username';
+        usernameInput.placeholder = 'Enter your username';
+        userIcon.className = 'bi bi-person input-icon';
+        roleHint.value = 'patient';
+    }
+}
+
+function quickFill(user, pass, role) {
+    selectRole(role);
+    document.getElementById('usernameInput').value = user;
+    document.getElementById('passwordInput').value = pass;
+    if (window.showAyurToast) {
+        window.showAyurToast(`Filled credentials for ${role}: ${user}`, 'info');
+    }
+}
+
+function togglePasswordVisibility(fieldId, btn) {
+    const field = document.getElementById(fieldId);
+    const icon = btn.querySelector('i');
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.className = 'bi bi-eye-slash';
+    } else {
+        field.type = 'password';
+        icon.className = 'bi bi-eye';
+    }
+}
+</script>
+{% endblock %}
